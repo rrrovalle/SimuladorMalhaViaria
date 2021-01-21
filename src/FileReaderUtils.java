@@ -1,0 +1,64 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
+
+public class FileReaderUtils {
+
+    private static FileReaderUtils instance;
+
+    private static String[] tamanho = new String[2];
+    private static String[][] matriz;
+
+    private FileReaderUtils() {
+    }
+
+    public static FileReaderUtils getInstance(){
+        if(instance != null){
+            instance = new FileReaderUtils();
+            return instance;
+        } else {
+            return instance;
+        }
+    }
+
+    public static int getCols(){
+        return Integer.parseInt(tamanho[1]);
+    }
+
+    public static int getRows(){
+        return Integer.parseInt(tamanho[0]);
+    }
+
+    public static void print(String file) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(file));
+
+        try {
+            String line = br.readLine();
+            tamanho[0] = line.split("\t")[0];
+            line = br.readLine();
+            tamanho[1] = line.split("\t")[0];
+
+            matriz = new String[getRows()][getCols()];
+
+            for (int i=0; i < (Integer.parseInt(tamanho[0])); i++) {
+                line = br.readLine();
+                String[] colunas = line.split("\t");
+                System.arraycopy(colunas, 0, matriz[i], 0, colunas.length);
+            }
+
+            for(String s : tamanho){
+                System.out.println(s);
+            }
+
+            for(String[] m : matriz){
+                System.out.println(Arrays.toString(m));
+            }
+
+        } finally {
+            br.close();
+
+        }
+
+    }
+}
