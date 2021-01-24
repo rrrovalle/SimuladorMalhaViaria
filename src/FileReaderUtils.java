@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,8 +14,8 @@ public class FileReaderUtils {
     private FileReaderUtils() {
     }
 
-    public static FileReaderUtils getInstance(){
-        if(instance != null){
+    public static FileReaderUtils getInstance() {
+        if (instance != null) {
             instance = new FileReaderUtils();
             return instance;
         } else {
@@ -22,12 +23,21 @@ public class FileReaderUtils {
         }
     }
 
-    public static int getCols(){
+    public static int getCols() {
         return Integer.parseInt(tamanho[1]);
     }
 
-    public static int getRows(){
+    public static int getRows() {
         return Integer.parseInt(tamanho[0]);
+    }
+
+    public static int getValueAtPosition(int row, int col) {
+        return Integer.parseInt(matriz[row][col]);
+    }
+
+    public static boolean checkRoadPosition(int row, int col) {
+        int value = Integer.parseInt(matriz[row][col]);
+        return value != 0;
     }
 
     public static void print(String file) throws IOException {
@@ -41,24 +51,15 @@ public class FileReaderUtils {
 
             matriz = new String[getRows()][getCols()];
 
-            for (int i=0; i < (Integer.parseInt(tamanho[0])); i++) {
+            for (int i = 0; i < (Integer.parseInt(tamanho[0])); i++) {
                 line = br.readLine();
                 String[] colunas = line.split("\t");
                 System.arraycopy(colunas, 0, matriz[i], 0, colunas.length);
             }
 
-            for(String s : tamanho){
-                System.out.println(s);
-            }
-
-            for(String[] m : matriz){
-                System.out.println(Arrays.toString(m));
-            }
-
         } finally {
             br.close();
-
         }
-
     }
+
 }

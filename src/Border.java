@@ -1,6 +1,5 @@
 import javax.swing.*;
-import java.awt.*;
-import java.io.File;
+import java.awt.*; 
 import java.io.IOException;
 
 public class Border {
@@ -17,7 +16,7 @@ public class Border {
 
     public Border() throws IOException {
 
-        FileReaderUtils.print("malhas/malha-exemplo-2.txt");
+        FileReaderUtils.print("malhas/malha-exemplo-3.txt");
 
         Road road = new Road();
         f.setSize(1200, 760);
@@ -38,8 +37,7 @@ public class Border {
 
     }
 
-    public static void main(String[] args) throws IOException {
-
+    public static void main(String[] args) throws IOException { 
         new Border();
     }
 }
