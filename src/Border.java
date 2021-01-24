@@ -16,7 +16,7 @@ public class Border {
 
     public Border() throws IOException {
 
-        FileReaderUtils.print("malhas/malha-exemplo-3.txt");
+        FileReaderUtils.print("malhas/malha-exemplo-2.txt");
 
         Road road = new Road();
         f.setSize(1200, 760);
@@ -32,8 +32,7 @@ public class Border {
 
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setLocationRelativeTo(null);
-        f.setVisible(true);
-
+        f.setVisible(true); 
 
     }
 

@@ -35,9 +35,8 @@ public class FileReaderUtils {
         return Integer.parseInt(matriz[row][col]);
     }
 
-    public static boolean checkRoadPosition(int row, int col) {
-        int value = Integer.parseInt(matriz[row][col]);
-        return value != 0;
+    public static boolean checkRoadPosition(int row, int col) {  
+        return Integer.parseInt(matriz[row][col]) != 0;
     }
 
     public static void print(String file) throws IOException {

@@ -33,7 +33,7 @@ public class Road extends JPanel {
         add(cells[i][j]);
     }
 
-    private void createRoad(int i, int j) {
+    private void createRoad(int i, int j) { 
         ImageIcon photo = new ImageIcon(BaseRoad.getRoadType(FileReaderUtils.getValueAtPosition(i, j)));
         cells[i][j] = new JButton();
         cells[i][j].setIcon(photo);
