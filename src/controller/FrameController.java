@@ -1,4 +1,7 @@
+package controller;
 import java.io.IOException;
+
+import utils.FileReaderUtils;
  
 public class FrameController implements Controller { 
 
@@ -22,7 +25,7 @@ public class FrameController implements Controller {
     
     @Override
     public void print() throws IOException {
-    	FileReaderUtils.print("malhas/malha-exemplo-2.txt");
+    	FileReaderUtils.print("malhas/malha-exemplo-3.txt");
     }
     
     @Override

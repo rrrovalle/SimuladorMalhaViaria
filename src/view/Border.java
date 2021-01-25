@@ -1,4 +1,9 @@
+package view;
 import javax.swing.*;
+
+import controller.Controller;
+import controller.FrameController;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
