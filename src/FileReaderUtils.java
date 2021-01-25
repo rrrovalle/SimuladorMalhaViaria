@@ -15,13 +15,12 @@ public class FileReaderUtils {
     }
 
     public static FileReaderUtils getInstance() {
-        if (instance != null) {
-            instance = new FileReaderUtils();
-            return instance;
-        } else {
-            return instance;
-        }
+    	if (instance == null) {
+			instance = new FileReaderUtils();
+		}
+		return instance;
     }
+    
 
     public static int getCols() {
         return Integer.parseInt(tamanho[1]);
