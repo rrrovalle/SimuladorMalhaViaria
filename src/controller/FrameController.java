@@ -12,7 +12,7 @@ public class FrameController implements Controller {
 			instance = new FrameController();
 		}
 		return instance;
-    } 
+    }  
     
     @Override
     public void change(String opt) {
@@ -29,8 +29,8 @@ public class FrameController implements Controller {
     }
     
     @Override
-    public void run() { 
-    	System.out.println("Iniciando..");
+    public void run(int cars) { 
+    	System.out.println(cars);
     } 
 
     @Override

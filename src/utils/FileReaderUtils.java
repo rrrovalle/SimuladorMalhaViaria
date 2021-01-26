@@ -20,8 +20,7 @@ public class FileReaderUtils {
 			instance = new FileReaderUtils();
 		}
 		return instance;
-    }
-    
+    } 
 
     public static int getCols() {
         return Integer.parseInt(tamanho[1]);

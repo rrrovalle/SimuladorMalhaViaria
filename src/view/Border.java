@@ -1,4 +1,5 @@
 package view;
+
 import javax.swing.*;
 
 import controller.Controller;
@@ -10,29 +11,48 @@ import java.io.IOException;
 
 public class Border {
 
-    JFrame f = new JFrame("Trabalho 2");
+	JFrame f = new JFrame("Trabalho 2");
+	
+	private Controller controller;
+	private Road road;
+	Container menu;
+	JButton btnStart;
+	JButton btnEnd;
 
-    private Controller controller;
-    Container menu = new Container();
-    JButton btnStart = new JButton("START");
-    JButton btnEnd = new JButton("END");
+	JLabel lbVeiculos;
+	JSpinner numeroVeiculos;
 
-    String[] vector = {"Semaforos", "Monitores"}; 
-	JComboBox select = new JComboBox(vector); 
+	String[] vector = {"Semaforo", "Monitor"};
+	JComboBox<String> select;
 
     public Border() throws IOException {
     	controller = FrameController.getInstance();
         controller.print();
-
-        Road road = new Road();
+        
+        road = new Road();
         f.setSize(1200, 760);
         f.setLayout(new BorderLayout());
 
-        menu.setLayout(new GridLayout(1, 4));
+        //Menu components
+        menu = new Container();
+
+        btnStart = new JButton("START"); 
+
+        btnEnd = new JButton("END"); 
+
+        select = new JComboBox(vector); 
+
+        lbVeiculos = new JLabel("Numero de veículos: ");
+        numeroVeiculos = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
+
+        menu.setLayout(new FlowLayout());
+
+        //Add components to menu
         menu.add(btnStart);
-        
         btnStart.addActionListener((ActionEvent e) -> {
-        	controller.run();
+        	String value = numeroVeiculos.getValue() + ""; 
+        	int cars = Integer.parseInt(value);
+        	controller.run(cars);
         });
         
         menu.add(btnEnd);
@@ -40,17 +60,21 @@ public class Border {
         	controller.stop();
         });
         
-        menu.add(select); 
+        menu.add(select);
         select.addActionListener((ActionEvent e) -> {
         	String resultado = (String) select.getSelectedItem();
         	controller.change(resultado);
         });
         
-        f.add(menu, BorderLayout.NORTH); 
+        menu.add(lbVeiculos);
+        menu.add(numeroVeiculos);  
+
+        //Add components to frame layout
+        f.add(menu, BorderLayout.NORTH);
         f.add(road, BorderLayout.CENTER);
 
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setLocationRelativeTo(null);
-        f.setVisible(true);  
+        f.setVisible(true);
     }
 }
