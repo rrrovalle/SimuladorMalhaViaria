@@ -1,5 +1,7 @@
 package utils;
 
+import model.Cell;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -9,18 +11,18 @@ public class FileReaderUtils {
 
     private static FileReaderUtils instance;
 
-    private static String[] tamanho = new String[2];
-    private static String[][] matriz;
+    private static final String[] tamanho = new String[2];
+    private static Cell[][] matriz;
 
     private FileReaderUtils() {
     }
 
     public static FileReaderUtils getInstance() {
-    	if (instance == null) {
-			instance = new FileReaderUtils();
-		}
-		return instance;
-    } 
+        if (instance == null) {
+            instance = new FileReaderUtils();
+        }
+        return instance;
+    }
 
     public static int getCols() {
         return Integer.parseInt(tamanho[1]);
@@ -31,11 +33,15 @@ public class FileReaderUtils {
     }
 
     public static int getValueAtPosition(int row, int col) {
-        return Integer.parseInt(matriz[row][col]);
+        return matriz[row][col].getMoveType();
     }
 
-    public static boolean checkRoadPosition(int row, int col) {  
-        return Integer.parseInt(matriz[row][col]) != 0;
+    public static Cell getCellAtPosition(int row, int col) {
+        return matriz[row][col];
+    }
+
+    public static boolean checkRoadPosition(int row, int col) {
+        return matriz[row][col].getMoveType() != 0;
     }
 
     public static void print(String file) throws IOException {
@@ -47,12 +53,15 @@ public class FileReaderUtils {
             line = br.readLine();
             tamanho[1] = line.split("\t")[0];
 
-            matriz = new String[getRows()][getCols()];
+            matriz = new Cell[getRows()][getCols()];
 
-            for (int i = 0; i < (Integer.parseInt(tamanho[0])); i++) {
+            for (int i = 0; i < getRows(); i++) {
                 line = br.readLine();
                 String[] colunas = line.split("\t");
-                System.arraycopy(colunas, 0, matriz[i], 0, colunas.length);
+
+                for(int j = 0; j < getCols(); j++){
+                    matriz[i][j] = new Cell(Integer.parseInt(colunas[j]));
+                }
             }
 
         } finally {
