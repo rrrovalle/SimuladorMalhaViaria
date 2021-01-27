@@ -24,11 +24,11 @@ public class FileReaderUtils {
         return instance;
     }
 
-    public static int getCols() {
+    public int getCols() {
         return Integer.parseInt(tamanho[1]);
     }
 
-    public static int getRows() {
+    public int getRows() {
         return Integer.parseInt(tamanho[0]);
     }
 
@@ -44,7 +44,7 @@ public class FileReaderUtils {
         return matriz[row][col].getMoveType() != 0;
     }
 
-    public static void print(String file) throws IOException {
+    public void print(String file) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
 
         try {

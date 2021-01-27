@@ -1,6 +1,8 @@
 package model;
 
-public class Cell {
+import javax.swing.*;
+
+public class Cell extends JButton {
 
     private boolean containsCar;
     private int moveType;
