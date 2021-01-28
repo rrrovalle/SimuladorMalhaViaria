@@ -1,4 +1,5 @@
 package controller;
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,15 +9,27 @@ import java.util.List;
 import model.Car;
 import model.Cell;
 import utils.MatrixManager;
- 
+import view.BaseRoad;
+
+import javax.swing.*;
+
 public class FrameController implements Controller { 
 
     private static FrameController instance;
-    private static MatrixManager matrixManager = MatrixManager.getInstance();
+
+    private MatrixManager matrixManager;
     private List<Car> cars = new ArrayList<>();
+    private Cell[][] cells;
 
-
-    private FrameController() { }
+    private FrameController() {
+        matrixManager = MatrixManager.getInstance();
+        try {
+            matrixManager.print("malhas/malha-exemplo-3.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        cells = new Cell[matrixManager.getRows()][matrixManager.getCols()];
+    }
 
     public static FrameController getInstance() {
     	if (instance == null) {
@@ -36,14 +49,12 @@ public class FrameController implements Controller {
 
     @Override
     public void print() throws IOException {
-//    	matrixManagerUtils.print();
         matrixManager.print("malhas/malha-exemplo-3.txt");
 
     }
     
     @Override
     public void start(int n) {
-        final int THREAD_NUM = n;
 
         matrixManager.findRowsEntries();
         matrixManager.findColumnsEntries();
@@ -51,21 +62,16 @@ public class FrameController implements Controller {
         Integer[] pos;
 
         for (int i = 0; i < n; i++) {
-            Car c = new Car();
-            boolean test = false;
-            while (!test){
+            Car newCar = new Car();
+            boolean checkFirstCell = false;
+            while (!checkFirstCell){
                 pos = getFirstCell();
-                test = c.setFirstPosition(pos[0], pos[1]);
+                checkFirstCell = newCar.setFirstPosition(pos[0], pos[1]);
 
             }
-            cars.add(c);
+            cars.add(newCar);
         }
 
-        boolean terminou = true;
-
-//        while (terminou){
-//
-//        }
 
     } 
 
@@ -73,21 +79,33 @@ public class FrameController implements Controller {
     public void stop() {
     	System.out.println("Finalizando..");
     }
-    
-    @Override
-    public int getFileRows(){
-        return matrixManager.getRows();
+
+    public MatrixManager getMatrixManager() {
+        return matrixManager;
     }
-    @Override
-    public int getFileCols(){
-        return matrixManager.getCols();
-    }
-    
+
     public Integer[] getFirstCell(){
         Collections.shuffle(matrixManager.getEntries());
         return matrixManager.getEntries().get(0);
     }
 
 
+    public JButton renderBackground(int i, int j) {
+        int x = matrixManager.getValueAtPosition(i, j);
+        cells[i][j] = new Cell(x);
+        cells[i][j].setBackground(Color.black);
+        cells[i][j].setEnabled(false);
+        cells[i][j].setBorderPainted(false);
+        return cells[i][j];
+    }
+
+    public JButton renderRoad(int i, int j) {
+        int x = matrixManager.getValueAtPosition(i, j);
+        ImageIcon photo = new ImageIcon(BaseRoad.getRoadType(x));
+        cells[i][j] = new Cell(x);
+        cells[i][j].setIcon(photo);
+        cells[i][j].setBorderPainted(false);
+        return cells[i][j];
+    }
 
 }

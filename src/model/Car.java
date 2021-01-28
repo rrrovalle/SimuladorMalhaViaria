@@ -11,12 +11,6 @@ public class Car extends Thread{
     private int speed;
 
     public Car(){
-
-    }
-
-    public Car(int row, int column){
-        this.row = row;
-        this.column = column;
         setSpeed();
     }
 
@@ -71,12 +65,12 @@ public class Car extends Thread{
     public boolean setFirstPosition(Integer row, Integer col) {
         Cell c = MatrixManager.getInstance().getCellAtPosition(row, col);
         if(c.containsCar()){
-            System.out.println("parado");
+            System.out.println("Vaga ocupada");
            return false;
 
         }else{
             c.setContainsCar(true);
-            System.out.println("andando");
+            System.out.println("inserido");
             return true;
         }
     }

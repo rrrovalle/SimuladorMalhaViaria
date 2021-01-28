@@ -13,8 +13,8 @@ public class MatrixManager {
 
     private static MatrixManager instance;
 
-    private static final String[] tamanho = new String[2];
-    private static Cell[][] matriz;
+    private final String[] tamanho = new String[2];
+    private Cell[][] matriz;
 
     private static List<Integer[]> entries = new ArrayList<>();
 
@@ -36,7 +36,7 @@ public class MatrixManager {
         return Integer.parseInt(tamanho[0]);
     }
 
-    public static int getValueAtPosition(int row, int col) {
+    public int getValueAtPosition(int row, int col) {
         return matriz[row][col].getMoveType();
     }
 
@@ -44,7 +44,7 @@ public class MatrixManager {
         return matriz[row][col];
     }
 
-    public static boolean checkRoadPosition(int row, int col) {
+    public boolean checkRoadPosition(int row, int col) {
         return matriz[row][col].getMoveType() != 0;
     }
 
@@ -74,7 +74,6 @@ public class MatrixManager {
     }
 
     public List<Integer[]> findColumnsEntries() {
-
         for (int i = 0; i < getCols(); i++) {
             // search for "down arrows" on top columns
             if (getValueAtPosition(0, i) == 3) {
@@ -89,7 +88,6 @@ public class MatrixManager {
     }
 
     public List<Integer[]> findRowsEntries() {
-
         for (int i = 0; i < getRows() - 1; i++) {
             // search for "right arrows" on side columns
             if (getValueAtPosition(i, 0) == 2) {
