@@ -6,6 +6,10 @@ public class Cell extends JButton {
 
     private boolean containsCar;
     private int moveType;
+    private Car c;
+    private boolean lastCell;
+    // referencia do carro
+    // referencia de celula final
 
     public Cell(int moveType){
         containsCar = false;

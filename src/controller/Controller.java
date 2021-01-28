@@ -7,6 +7,6 @@ public interface Controller {
 		public int getFileRows();
 		public int getFileCols();
 		public void changeMethodType(String opt);
-		public void run(int cars);
+		public void start(int i);
 		public void stop();  
 }

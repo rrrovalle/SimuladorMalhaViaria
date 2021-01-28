@@ -5,21 +5,25 @@ import model.Cell;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class FileReaderUtils {
+public class MatrixManager {
 
-    private static FileReaderUtils instance;
+    private static MatrixManager instance;
 
     private static final String[] tamanho = new String[2];
     private static Cell[][] matriz;
 
-    private FileReaderUtils() {
+    private static List<Integer[]> entries = new ArrayList<>();
+
+    private MatrixManager() {
     }
 
-    public static FileReaderUtils getInstance() {
+    public static MatrixManager getInstance() {
         if (instance == null) {
-            instance = new FileReaderUtils();
+            instance = new MatrixManager();
         }
         return instance;
     }
@@ -36,7 +40,7 @@ public class FileReaderUtils {
         return matriz[row][col].getMoveType();
     }
 
-    public static Cell getCellAtPosition(int row, int col) {
+    public Cell getCellAtPosition(int row, int col) {
         return matriz[row][col];
     }
 
@@ -67,6 +71,41 @@ public class FileReaderUtils {
         } finally {
             br.close();
         }
+    }
+
+    public List<Integer[]> findColumnsEntries() {
+
+        for (int i = 0; i < getCols(); i++) {
+            // search for "down arrows" on top columns
+            if (getValueAtPosition(0, i) == 3) {
+                entries.add(new Integer[]{0,i});
+                // search for "up arrows" on bottom columns
+            } else if (getValueAtPosition(getRows() - 1, i) == 1) {
+                entries.add(new Integer[]{getRows() - 1,i});
+            }
+        }
+
+        return entries;
+    }
+
+    public List<Integer[]> findRowsEntries() {
+
+        for (int i = 0; i < getRows() - 1; i++) {
+            // search for "right arrows" on side columns
+            if (getValueAtPosition(i, 0) == 2) {
+                entries.add(new Integer[]{i,0});
+
+                // search for "left arrows" on side columns
+            } else if (getValueAtPosition(i, getRows() - 1) == 4) {
+                entries.add(new Integer[]{i,getRows() - 1});
+
+            }
+        }
+        return entries;
+    }
+
+    public List<Integer[]> getEntries() {
+        return entries;
     }
 
 }

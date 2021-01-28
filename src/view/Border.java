@@ -10,8 +10,6 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 public class Border extends JFrame{
-
-	//JFrame f = new JFrame("Trabalho 2");
 	
 	private Controller controller;
 	private Road road;
@@ -26,6 +24,7 @@ public class Border extends JFrame{
 	JComboBox<String> select;
 
     public Border() throws IOException {
+
     	controller = FrameController.getInstance();
         controller.print();
 
@@ -40,7 +39,7 @@ public class Border extends JFrame{
         btnStart.addActionListener((ActionEvent e) -> {
             String value = numeroVeiculos.getValue() + "";
             int cars = Integer.parseInt(value);
-            controller.run(cars);
+            controller.start(cars);
         });
 
         btnEnd = new JButton("END");
@@ -74,4 +73,5 @@ public class Border extends JFrame{
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
+
 }
