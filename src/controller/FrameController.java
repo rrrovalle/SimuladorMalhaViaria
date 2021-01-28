@@ -1,12 +1,20 @@
 package controller;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import utils.FileReaderUtils;
+import model.Car;
+import model.Cell;
+import utils.MatrixManager;
  
 public class FrameController implements Controller { 
 
     private static FrameController instance;
-    private static FileReaderUtils fileReader = FileReaderUtils.getInstance();
+    private static MatrixManager matrixManager = MatrixManager.getInstance();
+    private List<Car> cars = new ArrayList<>();
+
 
     private FrameController() { }
 
@@ -25,34 +33,61 @@ public class FrameController implements Controller {
     		System.out.println("Trocando metodo para monitores..");
     	}
     }
-    
+
     @Override
     public void print() throws IOException {
-//    	FileReaderUtils.print();
-        fileReader.print("malhas/malha-exemplo-3.txt");
+//    	matrixManagerUtils.print();
+        matrixManager.print("malhas/malha-exemplo-3.txt");
 
     }
     
     @Override
-    public void run(int cars) {
+    public void start(int n) {
+        final int THREAD_NUM = n;
 
-        System.out.println(cars);
+        matrixManager.findRowsEntries();
+        matrixManager.findColumnsEntries();
+
+        Integer[] pos;
+
+        for (int i = 0; i < n; i++) {
+            Car c = new Car();
+            boolean test = false;
+            while (!test){
+                pos = getFirstCell();
+                test = c.setFirstPosition(pos[0], pos[1]);
+
+            }
+            cars.add(c);
+        }
+
+        boolean terminou = true;
+
+//        while (terminou){
+//
+//        }
+
     } 
 
     @Override
     public void stop() {
     	System.out.println("Finalizando..");
     }
-
-
+    
     @Override
     public int getFileRows(){
-        return fileReader.getRows();
+        return matrixManager.getRows();
     }
     @Override
     public int getFileCols(){
-        return fileReader.getCols();
+        return matrixManager.getCols();
     }
+    
+    public Integer[] getFirstCell(){
+        Collections.shuffle(matrixManager.getEntries());
+        return matrixManager.getEntries().get(0);
+    }
+
 
 
 }
