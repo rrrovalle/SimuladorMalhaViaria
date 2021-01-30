@@ -2,12 +2,13 @@ package model;
 
 import javax.swing.*;
 
-public class Cell extends JButton {
+public class Cell {
 
     private boolean containsCar;
     private int moveType;
+    private Icon icon;
     private Car c;
-    private boolean lastCell;
+//    private boolean lastCell;
     // referencia do carro
     // referencia de celula final
 
@@ -26,5 +27,13 @@ public class Cell extends JButton {
 
     public int getMoveType() {
         return moveType;
+    }
+
+    public Icon getIcon() {
+        return icon;
+    }
+
+    public void setIcon(ImageIcon icon) {
+        this.icon = icon;
     }
 }

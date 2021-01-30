@@ -63,13 +63,15 @@ public class Car extends Thread{
     }
 
     public boolean setFirstPosition(Integer row, Integer col) {
-        Cell c = MatrixManager.getInstance().getCellAtPosition(row, col);
-        if(c.containsCar()){
+        Cell cell = MatrixManager.getInstance().getCellAtPosition(row, col);
+        if(cell.containsCar()){
             System.out.println("Vaga ocupada");
            return false;
 
         }else{
-            c.setContainsCar(true);
+            cell.setContainsCar(true);
+            setRow(row);
+            setRow(col);
             System.out.println("inserido");
             return true;
         }

@@ -27,7 +27,7 @@ public class Border extends JFrame{
 
     	controller = FrameController.getInstance();
 
-        this.setSize(1200, 760);
+        this.setSize(1200, 920);
         this.setLayout(new BorderLayout());
 
         road = new Road();
@@ -71,7 +71,8 @@ public class Border extends JFrame{
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
-        this.setVisible(true);
+
+//        this.pack();
     }
 
 }

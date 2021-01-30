@@ -2,10 +2,10 @@ package controller;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import controller.observer.Observer;
 import model.Car;
 import model.Cell;
 import utils.MatrixManager;
@@ -21,6 +21,8 @@ public class FrameController implements Controller {
     private List<Car> cars = new ArrayList<>();
     private Cell[][] cells;
 
+    private List<Observer> observers = new ArrayList<>();
+
     private FrameController() {
         matrixManager = MatrixManager.getInstance();
         try {
@@ -28,7 +30,7 @@ public class FrameController implements Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        cells = new Cell[matrixManager.getRows()][matrixManager.getCols()];
+        initRoadCells();
     }
 
     public static FrameController getInstance() {
@@ -36,8 +38,16 @@ public class FrameController implements Controller {
 			instance = new FrameController();
 		}
 		return instance;
-    }  
-    
+    }
+
+    public void attach(Observer obs) {
+        observers.add(obs);
+    }
+
+    public void detach(Observer obs) {
+        observers.remove(obs);
+    }
+
     @Override //talvez adicionar uma logica usando strategy
     public void changeMethodType(String opt) {
     	if(opt.equals("Semaforos")) { 
@@ -47,12 +57,6 @@ public class FrameController implements Controller {
     	}
     }
 
-    @Override
-    public void print() throws IOException {
-        matrixManager.print("malhas/malha-exemplo-3.txt");
-
-    }
-    
     @Override
     public void start(int n) {
 
@@ -70,6 +74,11 @@ public class FrameController implements Controller {
 
             }
             cars.add(newCar);
+            for (Car c :
+                    cars) {
+                System.out.println(c.getRow() + " - " + c.getColumn());
+
+            }
         }
 
 
@@ -89,23 +98,21 @@ public class FrameController implements Controller {
         return matrixManager.getEntries().get(0);
     }
 
+    private void initRoadCells() {
+        cells = new Cell[matrixManager.getRows()][matrixManager.getCols()];
 
-    public JButton renderBackground(int i, int j) {
-        int x = matrixManager.getValueAtPosition(i, j);
-        cells[i][j] = new Cell(x);
-        cells[i][j].setBackground(Color.black);
-        cells[i][j].setEnabled(false);
-        cells[i][j].setBorderPainted(false);
-        return cells[i][j];
+        for (int i = 0; i < matrixManager.getRows(); i++) {
+            for (int j = 0; j < matrixManager.getCols(); j++) {
+                int moveType = matrixManager.getValueAtPosition(i, j);
+                cells[i][j] = new Cell(moveType);
+                cells[i][j].setIcon(new ImageIcon(BaseRoad.getRoadType(moveType)));
+            }
+        }
     }
 
-    public JButton renderRoad(int i, int j) {
-        int x = matrixManager.getValueAtPosition(i, j);
-        ImageIcon photo = new ImageIcon(BaseRoad.getRoadType(x));
-        cells[i][j] = new Cell(x);
-        cells[i][j].setIcon(photo);
-        cells[i][j].setBorderPainted(false);
-        return cells[i][j];
+    public Icon renderCell(int row, int col){
+        return cells[row][col].getIcon();
     }
+
 
 }

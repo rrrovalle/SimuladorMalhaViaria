@@ -2,64 +2,90 @@ package view;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import controller.FrameController;
-import model.Cell;
-import utils.MatrixManager;
+import controller.observer.Observer;
 
 import java.awt.*;
 
-public class Road extends JPanel {
+public class Road extends JPanel implements Observer {
 
-    private int rows;
-    private int cols;
+
+    class CellModel extends AbstractTableModel{
+
+        @Override
+        public int getRowCount() {
+            return fc.getMatrixManager().getRows();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return fc.getMatrixManager().getCols();
+        }
+
+        @Override
+        public Object getValueAt(int row, int col) {
+            return fc.renderCell(row, col);
+        }
+
+    }
+
+    class CellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table,
+                                                       Object value,
+                                                       boolean isSelected,
+                                                       boolean hasFocus,
+                                                       int row,
+                                                       int col) {
+            setIcon((ImageIcon) value);
+
+            return this;
+        }
+    }
 
     private FrameController fc;
+
+    private CellModel cellModel;
+    private JTable cellTable;
 
 
     public Road() {
         super();
 
         fc = FrameController.getInstance();
+        fc.attach(this);
 
-        this.rows = fc.getMatrixManager().getRows();
-        this.cols = fc.getMatrixManager().getCols();
+        cellModel = new CellModel();
 
-        setLayout(new GridLayout(rows, cols));
+        initComponents();
 
-        paintRoad();
     }
 
-    private void paintRoad() {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                if (fc.getMatrixManager().checkRoadPosition(i, j)) {
-//                    createRoad(i, j);
-                    add(fc.renderRoad(i, j));
-                } else {
-//                    createBackground(i, j);
-                    add(fc.renderBackground(i, j));
-                }
-            }
+    private void initComponents() {
+
+        cellTable = new JTable();
+        cellTable.setBackground(Color.black);
+        cellTable.setModel(this.cellModel);
+        for (int x = 0 ; x < cellTable.getColumnModel().getColumnCount(); x++) {
+            cellTable.getColumnModel().getColumn(x).setWidth(35);
+//            cellTable.getColumnModel().getColumn(x).setMinWidth(35);
+            cellTable.getColumnModel().getColumn(x).setMaxWidth(45);
         }
+        cellTable.setRowHeight(32);
+        cellTable.setShowGrid(false);
+
+        cellTable.setDefaultRenderer(Object.class, new CellRenderer());
+
+        add(cellTable);
+
+
     }
 
-//    private void createBackground(int i, int j) {
-//        int x = fc.getMatrixManager().getValueAtPosition(i, j);
-//        cells[i][j] = new Cell(x);
-//        cells[i][j].setBackground(Color.black);
-//        cells[i][j].setEnabled(false);
-//        cells[i][j].setBorderPainted(false);
-//        add(cells[i][j]);
-//    }
-//
-//    private void createRoad(int i, int j) {
-//        int x = fc.getMatrixManager().getValueAtPosition(i, j);
-//        ImageIcon photo = new ImageIcon(BaseRoad.getRoadType(x));
-//        cells[i][j] = new Cell(x);
-//        cells[i][j].setIcon(photo);
-////        cells[i][j].setEnabled(false);
-////        cells[i][j].setBorderPainted(false);
-//        add(cells[i][j]);
-//    }
+    @Override
+    public void updateCarPosition() {
+
+    }
+
 }

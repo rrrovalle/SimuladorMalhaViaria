@@ -103,6 +103,14 @@ public class MatrixManager {
     }
 
     public List<Integer[]> getEntries() {
+        for (Integer[] cord:
+             entries) {
+            for (int j = 0; j < cord.length; j++) {
+                System.out.print(cord[j] +  " ");
+
+            }
+            System.out.print(" , ");
+        }
         return entries;
     }
 
