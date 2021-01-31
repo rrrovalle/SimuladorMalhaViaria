@@ -9,9 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
-public class Border {
-
-	JFrame f = new JFrame("Trabalho 2");
+public class Border extends JFrame{
 	
 	private Controller controller;
 	private Road road;
@@ -26,55 +24,55 @@ public class Border {
 	JComboBox<String> select;
 
     public Border() throws IOException {
+
     	controller = FrameController.getInstance();
-        controller.print();
-        
+
+        this.setSize(1200, 920);
+        this.setLayout(new BorderLayout());
+
         road = new Road();
-        f.setSize(1200, 760);
-        f.setLayout(new BorderLayout());
 
         //Menu components
         menu = new Container();
 
-        btnStart = new JButton("START"); 
+        btnStart = new JButton("START");
+        btnStart.addActionListener((ActionEvent e) -> {
+            String value = numeroVeiculos.getValue() + "";
+            int cars = Integer.parseInt(value);
+            controller.start(cars);
+        });
 
-        btnEnd = new JButton("END"); 
+        btnEnd = new JButton("END");
+        btnEnd.addActionListener((ActionEvent e) -> {
+            controller.stop();
+        });
 
-        select = new JComboBox(vector); 
+        select = new JComboBox(vector);
+        select.addActionListener((ActionEvent e) -> {
+            String resultado = (String) select.getSelectedItem();
+            controller.changeMethodType(resultado);
+        });
 
-        lbVeiculos = new JLabel("Numero de veículos: ");
+        lbVeiculos = new JLabel("Numero de veÃ­culos: ");
         numeroVeiculos = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 
         menu.setLayout(new FlowLayout());
 
         //Add components to menu
         menu.add(btnStart);
-        btnStart.addActionListener((ActionEvent e) -> {
-        	String value = numeroVeiculos.getValue() + ""; 
-        	int cars = Integer.parseInt(value);
-        	controller.run(cars);
-        });
-        
         menu.add(btnEnd);
-        btnEnd.addActionListener((ActionEvent e) -> {
-        	controller.stop();
-        });
-        
         menu.add(select);
-        select.addActionListener((ActionEvent e) -> {
-        	String resultado = (String) select.getSelectedItem();
-        	controller.change(resultado);
-        });
-        
         menu.add(lbVeiculos);
         menu.add(numeroVeiculos);  
 
         //Add components to frame layout
-        f.add(menu, BorderLayout.NORTH);
-        f.add(road, BorderLayout.CENTER);
+        this.add(menu, BorderLayout.NORTH);
+        this.add(road, BorderLayout.CENTER);
 
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setLocationRelativeTo(null);
-        f.setVisible(true);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+
+//        this.pack();
     }
+
 }
