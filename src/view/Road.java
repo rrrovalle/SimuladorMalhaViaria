@@ -85,7 +85,7 @@ public class Road extends JPanel implements Observer {
 
     @Override
     public void updateCarPosition() {
-
+        updateUI();
     }
 
 }

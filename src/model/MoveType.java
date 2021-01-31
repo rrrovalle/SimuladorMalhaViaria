@@ -2,8 +2,8 @@ package model;
 
 public enum MoveType {
 
-    RIGHT("img/car-dir.png", 1), lEFT("img/car-esq.png", 2), UP("img/car-cima.png", 3),
-    DOWN("img/car-baixo.png", 4);
+    UP("img/car-cima.png", 1), RIGHT("img/car-dir.png", 2), DOWN("img/car-baixo.png", 3),
+    LEFT("img/car-esq.png", 4);
 
     private String filePath;
     private int side;
@@ -14,13 +14,13 @@ public enum MoveType {
     }
 
     public String toString() {
-        return filePath + ".png";
+        return filePath;
     }
 
-    public MoveType getMoveType(int side) {
+    public static String getMoveType(int side) {
         for (MoveType moveType : MoveType.values()) {
             if (moveType.side == side)
-                return moveType;
+                return moveType.toString();
         }
         return null;
     }

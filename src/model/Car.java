@@ -71,8 +71,8 @@ public class Car extends Thread{
         }else{
             cell.setContainsCar(true);
             setRow(row);
-            setRow(col);
-            System.out.println("inserido");
+            setColumn(col);
+            System.out.println("inserido em:"+row+","+col);
             return true;
         }
     }
