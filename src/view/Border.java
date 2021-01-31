@@ -27,9 +27,9 @@ public class Border extends JFrame{
 
     	controller = FrameController.getInstance();
 
-        this.setSize(1200, 820);
+        this.setSize(1200, 960);
         this.setLayout(new BorderLayout());
-
+        this.setLocationRelativeTo(null);
         road = new Road();
 
         //Menu components

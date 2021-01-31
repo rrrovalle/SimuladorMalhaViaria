@@ -23,7 +23,7 @@ public class FrameController implements Controller {
 
     private FrameController() {
         try {
-            this.matrixManager.print("malhas/malha-exemplo-3.txt");
+            this.matrixManager.print("malhas/malha-exemplo-2.txt");
         } catch (IOException var2) {
             var2.printStackTrace();
         }
@@ -97,7 +97,7 @@ public class FrameController implements Controller {
                 this.cells[i][j] = new Cell(moveType);
                 this.cells[i][j].setIcon(new ImageIcon(BaseRoad.getRoadType(moveType)));
             }
-        } 
+        }
     }
 
     public Icon renderCell(int row, int col) {
