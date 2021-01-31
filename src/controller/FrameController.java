@@ -70,7 +70,7 @@ public class FrameController implements Controller {
             }
 
             this.cars.add(newCar);
-            this.addCar(newCar.getRow(), newCar.getColumn());
+            this.addCarToRoadView(newCar);
         }
 
     }
@@ -104,10 +104,15 @@ public class FrameController implements Controller {
         return this.cells[row][col].getIcon();
     }
 
-    public void addCar(int i, int j) { 
+    public void addCarToRoadView(Car c) {
+        int i = c.getRow();
+        int j = c.getColumn();
+
         int moveType = this.matrixManager.getValueAtPosition(i, j);
-        this.cells[i][j] = new Cell(moveType);
+//        this.cells[i][j] = new Cell(moveType); //acho que não é necessario recriar as cell, so referenciar o carro e automaticamente ele atualzia que containsCar = true
         this.cells[i][j].setIcon(new ImageIcon(MoveType.getMoveType(moveType)));
+        this.cells[i][j].setCar(c);
+
         notifyUpdate();
     }
 

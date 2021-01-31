@@ -7,7 +7,7 @@ public class Cell {
     private boolean containsCar;
     private int moveType;
     private Icon icon;
-    private Car c;
+    private Car car;
 //    private boolean lastCell;
     // referencia do carro
     // referencia de celula final
@@ -23,6 +23,15 @@ public class Cell {
 
     public void setContainsCar(boolean containsCar) {
         this.containsCar = containsCar;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car c) {
+        this.setContainsCar(true);
+        this.car = c;
     }
 
     public int getMoveType() {
