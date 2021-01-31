@@ -13,8 +13,8 @@ public class MatrixManager {
 
     private static MatrixManager instance;
 
-    private static final String[] tamanho = new String[2];
-    private static Cell[][] matriz;
+    private final String[] tamanho = new String[2];
+    private Cell[][] matriz;
 
     private static List<Integer[]> entries = new ArrayList<>();
 
@@ -36,7 +36,7 @@ public class MatrixManager {
         return Integer.parseInt(tamanho[0]);
     }
 
-    public static int getValueAtPosition(int row, int col) {
+    public int getValueAtPosition(int row, int col) {
         return matriz[row][col].getMoveType();
     }
 
@@ -44,7 +44,7 @@ public class MatrixManager {
         return matriz[row][col];
     }
 
-    public static boolean checkRoadPosition(int row, int col) {
+    public boolean checkRoadPosition(int row, int col) {
         return matriz[row][col].getMoveType() != 0;
     }
 
@@ -74,33 +74,25 @@ public class MatrixManager {
     }
 
     public List<Integer[]> findColumnsEntries() {
-
-        for (int i = 0; i < getCols(); i++) {
-            // search for "down arrows" on top columns
+        for(int i = 0; i < this.getCols(); ++i) {
             if (getValueAtPosition(0, i) == 3) {
-                entries.add(new Integer[]{0,i});
-                // search for "up arrows" on bottom columns
-            } else if (getValueAtPosition(getRows() - 1, i) == 1) {
-                entries.add(new Integer[]{getRows() - 1,i});
+                entries.add(new Integer[]{0, i});
+            } else if (getValueAtPosition(this.getRows() - 1, i) == 1) {
+                entries.add(new Integer[]{this.getRows() - 1, i});
             }
         }
-
         return entries;
     }
 
     public List<Integer[]> findRowsEntries() {
-
-        for (int i = 0; i < getRows() - 1; i++) {
-            // search for "right arrows" on side columns
+        for(int i = 0; i < this.getRows() - 1; ++i) {
             if (getValueAtPosition(i, 0) == 2) {
-                entries.add(new Integer[]{i,0});
-
-                // search for "left arrows" on side columns
-            } else if (getValueAtPosition(i, getRows() - 1) == 4) {
-                entries.add(new Integer[]{i,getRows() - 1});
-
+                entries.add(new Integer[]{i, 0});
+            } else if (getValueAtPosition(i, this.getCols() - 1) == 4) {
+                entries.add(new Integer[]{i, this.getCols() - 1});
             }
         }
+
         return entries;
     }
 
@@ -108,4 +100,15 @@ public class MatrixManager {
         return entries;
     }
 
+    public List<Integer[]> printEntries() {
+        for (Integer[] cord:
+                entries) {
+            for (int j = 0; j < cord.length; j++) {
+                System.out.print(cord[j] +  " ");
+
+            }
+            System.out.print(" , ");
+        }
+        return entries;
+    }
 }

@@ -26,11 +26,11 @@ public class Border extends JFrame{
     public Border() throws IOException {
 
     	controller = FrameController.getInstance();
-        controller.print();
 
-        road = new Road(controller.getFileRows(), controller.getFileCols());
-        this.setSize(1200, 760);
+        this.setSize(1200, 960);
         this.setLayout(new BorderLayout());
+        this.setLocationRelativeTo(null);
+        road = new Road();
 
         //Menu components
         menu = new Container();
@@ -71,7 +71,8 @@ public class Border extends JFrame{
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
-        this.setVisible(true);
+
+//        this.pack();
     }
 
 }

@@ -1,12 +1,12 @@
 package controller;
-import java.io.IOException;
 
 public interface Controller {
+	
+	public void changeMethodType(String var1);
 
-		public void print() throws IOException;
-		public int getFileRows();
-		public int getFileCols();
-		public void changeMethodType(String opt);
-		public void start(int i);
-		public void stop();  
+	public void start(int var1);
+
+	public void stop();
+
+	public void notifyUpdate();
 }
