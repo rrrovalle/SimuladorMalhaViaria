@@ -18,8 +18,7 @@ public class MatrixManager {
 
     private static List<Integer[]> entries = new ArrayList<>();
 
-    private MatrixManager() {
-    }
+    private MatrixManager() { }
 
     public static MatrixManager getInstance() {
         if (instance == null) {
@@ -94,6 +93,11 @@ public class MatrixManager {
         }
 
         return entries;
+    }
+
+    public void loadEntries(){
+        findRowsEntries();
+        findColumnsEntries();
     }
 
     public List<Integer[]> getEntries() {

@@ -53,14 +53,10 @@ public class FrameController implements Controller {
         } else if (opt.equals("Monitores")) {
             System.out.println("Trocando metodo para monitores..");
         }
-
     }
 
     public void start(int n) {
-        this.matrixManager.findRowsEntries();
-        this.matrixManager.findColumnsEntries();
-        this.matrixManager.printEntries();
-
+        matrixManager.loadEntries();
         for(int i = 0; i < n; ++i) {
             Car newCar = new Car();
 
@@ -70,7 +66,7 @@ public class FrameController implements Controller {
             }
 
             this.cars.add(newCar);
-            this.addCar(newCar.getRow(), newCar.getColumn());
+            this.addCarToRoadView(newCar);
         }
 
     }
@@ -104,21 +100,21 @@ public class FrameController implements Controller {
         return this.cells[row][col].getIcon();
     }
 
-    public void addCar(int i, int j) { 
+    public void addCarToRoadView(Car c) {
+        int i = c.getRow();
+        int j = c.getColumn();
+
         int moveType = this.matrixManager.getValueAtPosition(i, j);
-        this.cells[i][j] = new Cell(moveType);
         this.cells[i][j].setIcon(new ImageIcon(MoveType.getMoveType(moveType)));
+        this.cells[i][j].setCar(c);
+
         notifyUpdate();
     }
 
     public void notifyUpdate() {
-        Iterator var1 = this.observers.iterator();
-
-        while(var1.hasNext()) {
-            Observer observer = (Observer)var1.next();
+        for (Observer observer : observers) {
             observer.updateCarPosition();
         }
-
     }
 }
 
