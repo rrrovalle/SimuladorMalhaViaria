@@ -55,7 +55,7 @@ public class FrameController implements Controller {
         }
     }
 
-    public void start(int n) {
+    public void start(int n) throws InterruptedException {
         matrixManager.loadEntries();
         for(int i = 0; i < n; ++i) {
             Car newCar = new Car();
@@ -66,7 +66,17 @@ public class FrameController implements Controller {
             }
 
             this.cars.add(newCar);
-            this.addCarToRoadView(newCar);
+            for (Car c :
+                    cars) {
+                 this.addCarToRoadView(c);
+             }
+        }
+
+        for (Car c :
+                cars) {
+            resetCarCell(c);
+            c.run();
+            addCarToRoadView(c);
         }
 
     }
@@ -104,11 +114,19 @@ public class FrameController implements Controller {
         int i = c.getRow();
         int j = c.getColumn();
 
+        System.out.println(c.getRow()+","+c.getColumn());
         int moveType = this.matrixManager.getValueAtPosition(i, j);
         this.cells[i][j].setIcon(new ImageIcon(MoveType.getMoveType(moveType)));
         this.cells[i][j].setCar(c);
 
         notifyUpdate();
+    }
+
+    public void resetCarCell(Car c){
+        System.out.println(c.getRow()+","+c.getColumn());
+        int moveType = this.matrixManager.getValueAtPosition(c.getRow(), c.getColumn());
+        this.cells[c.getRow()][c.getColumn()].reset();
+        this.cells[c.getRow()][c.getColumn()].setIcon(new ImageIcon(BaseRoad.getRoadType(moveType)));
     }
 
     public void notifyUpdate() {

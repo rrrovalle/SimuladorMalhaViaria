@@ -8,8 +8,7 @@ public class Cell {
     private int moveType;
     private Icon icon;
     private Car car;
-//    private boolean lastCell;
-    // referencia do carro
+    //private boolean lastCell;
     // referencia de celula final
 
     public Cell(int moveType){
@@ -24,6 +23,11 @@ public class Cell {
     public void setCar(Car c) {
         this.setContainsCar(true);
         this.car = c;
+    }
+
+    public void reset(){
+        this.setContainsCar(false);
+        this.car = null;
     }
 
     public boolean containsCar() {

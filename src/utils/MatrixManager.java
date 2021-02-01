@@ -91,7 +91,6 @@ public class MatrixManager {
                 entries.add(new Integer[]{i, this.getCols() - 1});
             }
         }
-
         return entries;
     }
 
