@@ -4,39 +4,49 @@ import utils.MatrixManager;
 
 import java.util.Random;
 
-public class Car extends Thread{
+public class Car extends Thread {
 
     private int row;
     private int column;
     private int speed;
+    private boolean outOfRoad = false;
 
     private Cell cell;
     private Cell nextCell;
 
-    public Car(){
+    public Car() {
         setSpeed();
     }
 
     @Override
     public void run() {
         super.run();
-        if (checkLastCell()){
-            System.out.println("ultima celula");
-        }else {
-//            while (checkLastCell() || checkStopCell()){
-                movimenta();
 
-//            }
+        while (!outOfRoad) {
+            if (checkLastCell()) {
+                System.out.println("ultima celula");
+                outOfRoad = true;
+            } else if (checkStopCell()) {
+                verificaCruzamento();
+            } else {
+                movimenta();
+            }
+
+            try {
+                Thread.sleep(speed);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private boolean checkLastCell() {
-        return false;
+        return cell.isLastCell();
     }
 
-//    private boolean checkStopCell(){ //cruzamento
-//       return false
-//    }
+    private boolean checkStopCell(){ //cruzamento
+       return false;
+    }
 
     private void movimenta() {
         int moveType = MatrixManager.getInstance().getValueAtPosition(this.getRow(), this.getColumn());
@@ -83,12 +93,12 @@ public class Car extends Thread{
         this.column = column;
     }
 
-    public void setSpeed(){
+    public void setSpeed() {
         Random random = new Random();
         this.speed = random.nextInt((100) + 1) + 10;
     }
 
-    public int getSpeed(){ //timesleep para a thread
+    public int getSpeed() { //timesleep para a thread
         return speed;
     }
 
@@ -102,15 +112,15 @@ public class Car extends Thread{
 
     public boolean setFirstPosition(Integer row, Integer col) {
         Cell cell = MatrixManager.getInstance().getCellAtPosition(row, col);
-        if(cell.containsCar()){
+        if (cell.containsCar()) {
             System.out.println("Vaga ocupada");
-           return false;
+            return false;
 
-        }else{
+        } else {
             cell.setContainsCar(true);
             setRow(row);
             setColumn(col);
-            System.out.println("inserido em:"+row+","+col);
+            System.out.println("inserido em:" + row + "," + col);
             return true;
         }
     }
