@@ -15,6 +15,7 @@ import utils.MatrixManager;
 import model.BaseRoad;
 
 public class FrameController implements Controller {
+
     private static FrameController instance;
     private MatrixManager matrixManager = MatrixManager.getInstance();
     private List<Car> cars = new ArrayList();
@@ -58,18 +59,11 @@ public class FrameController implements Controller {
 
     }
 
-<<<<<<< Updated upstream
-    public void start(int n) {
-        this.matrixManager.findRowsEntries();
-        this.matrixManager.findColumnsEntries();
-        this.matrixManager.printEntries();
-=======
     public void start(int n) throws InterruptedException {
 
 //        matrixManager.printEntries();
 //        System.out.println("======================================================================");
 //        matrixManager.printExits();
->>>>>>> Stashed changes
 
         for(int i = 0; i < n; ++i) {
             Car newCar = new Car();
@@ -81,6 +75,13 @@ public class FrameController implements Controller {
 
             this.cars.add(newCar);
             this.addCarToRoadView(newCar);
+        }
+
+        for (Car c :
+                cars) {
+            resetCarCell(c);
+            c.run();
+            addCarToRoadView(c);
         }
 
     }
@@ -149,24 +150,17 @@ public class FrameController implements Controller {
         notifyUpdate();
     }
 
-<<<<<<< Updated upstream
-=======
-    private void resetCarCell(Car c){
+    public void resetCarCell(Car c){
         System.out.println(c.getRow()+","+c.getColumn());
         int moveType = this.matrixManager.getValueAtPosition(c.getRow(), c.getColumn());
         this.cells[c.getRow()][c.getColumn()].reset();
         this.cells[c.getRow()][c.getColumn()].setIcon(new ImageIcon(BaseRoad.getRoadType(moveType)));
     }
 
->>>>>>> Stashed changes
     public void notifyUpdate() {
-        Iterator var1 = this.observers.iterator();
-
-        while(var1.hasNext()) {
-            Observer observer = (Observer)var1.next();
+        for (Observer observer : observers) {
             observer.updateCarPosition();
         }
-
     }
 }
 
