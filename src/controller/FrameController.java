@@ -120,9 +120,9 @@ public class FrameController implements Controller {
     }
 
     private boolean setLastCell(Integer[] array) {
-        for (Integer[] a :
+        for (Integer[] aValue :
                 this.matrixManager.getExits()) {
-            if(Arrays.equals(a, array)){
+            if(Arrays.equals(aValue, array)){
                 return true;
             }
         }
