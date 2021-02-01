@@ -49,4 +49,5 @@ public class Cell {
     public void setIcon(ImageIcon icon) {
         this.icon = icon;
     }
+
 }

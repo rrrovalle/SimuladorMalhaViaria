@@ -66,19 +66,15 @@ public class FrameController implements Controller {
             }
 
             this.cars.add(newCar);
-            for (Car c :
-                    cars) {
-                 this.addCarToRoadView(c);
-             }
+            addCarToRoadView(newCar);
         }
 
         for (Car c :
                 cars) {
-            resetCarCell(c);
-            c.run();
-            addCarToRoadView(c);
+              resetCarCell(c);
+              c.run();
+              addCarToRoadView(c);
         }
-
     }
 
     public void stop() {

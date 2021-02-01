@@ -17,11 +17,7 @@ public class Car extends Thread{
     @Override
     public void run() {
         super.run();
-        if (checkCell()){
-            System.out.println("ultima celula");
-        }else {
-            movimenta();
-        }
+        movimenta();
     }
 
     private boolean checkCell() {
@@ -30,22 +26,29 @@ public class Car extends Thread{
 
     private void movimenta() {
         int moveType = MatrixManager.getInstance().getValueAtPosition(this.getRow(), this.getColumn());
-        if(moveType == 1){
-            System.out.println("andou cima");
-            this.setRow(this.getRow()-1);
-            this.setColumn(this.getColumn());
-        }else if(moveType == 2){
-            System.out.println("andou dir");
-            this.setRow(this.getRow());
-            this.setColumn(this.getColumn()+1);
-        }else if(moveType == 3){
-            System.out.println("andou baixo");
-            this.setRow(this.getRow()+1);
-            this.setColumn(this.getColumn());
-        }else{
-            System.out.println("andou esq");
-            this.setRow(this.getRow());
-            this.setColumn(this.getColumn()-1);
+        switch(moveType){
+            case 1:
+                System.out.println("andou cima");
+                this.setRow(this.getRow()-1);
+                this.setColumn(this.getColumn());
+                break;
+            case 2:
+                System.out.println("andou dir");
+                this.setRow(this.getRow());
+                this.setColumn(this.getColumn()+1);
+                break;
+            case 3:
+                System.out.println("andou baixo");
+                this.setRow(this.getRow()+1);
+                this.setColumn(this.getColumn());
+                break;
+            case 4:
+                System.out.println("andou esq");
+                this.setRow(this.getRow());
+                this.setColumn(this.getColumn()-1);
+                break;
+            default:
+                break;
         }
     }
 
