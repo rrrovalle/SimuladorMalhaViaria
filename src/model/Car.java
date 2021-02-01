@@ -10,6 +10,9 @@ public class Car extends Thread{
     private int column;
     private int speed;
 
+    private Cell cell;
+    private Cell nextCell;
+
     public Car(){
         setSpeed();
     }
@@ -17,12 +20,23 @@ public class Car extends Thread{
     @Override
     public void run() {
         super.run();
-        movimenta();
+        if (checkLastCell()){
+            System.out.println("ultima celula");
+        }else {
+//            while (checkLastCell() || checkStopCell()){
+                movimenta();
+
+//            }
+        }
     }
 
-    private boolean checkCell() {
+    private boolean checkLastCell() {
         return false;
     }
+
+//    private boolean checkStopCell(){ //cruzamento
+//       return false
+//    }
 
     private void movimenta() {
         int moveType = MatrixManager.getInstance().getValueAtPosition(this.getRow(), this.getColumn());
@@ -50,6 +64,7 @@ public class Car extends Thread{
             default:
                 break;
         }
+
     }
 
     public int getRow() {
@@ -77,11 +92,20 @@ public class Car extends Thread{
         return speed;
     }
 
+    public Cell getCell() {
+        return cell;
+    }
+
+    public void setCell(Cell cell) {
+        this.cell = cell;
+    }
+
     public boolean setFirstPosition(Integer row, Integer col) {
         Cell cell = MatrixManager.getInstance().getCellAtPosition(row, col);
         if(cell.containsCar()){
             System.out.println("Vaga ocupada");
            return false;
+
         }else{
             cell.setContainsCar(true);
             setRow(row);
