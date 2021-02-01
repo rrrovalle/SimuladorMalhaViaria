@@ -28,7 +28,6 @@ public class Car extends Thread{
 
 //            }
         }
-        movimenta();
     }
 
     private boolean checkLastCell() {
