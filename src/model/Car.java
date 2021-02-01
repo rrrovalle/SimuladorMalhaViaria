@@ -10,9 +10,6 @@ public class Car extends Thread{
     private int column;
     private int speed;
 
-    private Cell cell;
-    private Cell nextCell;
-
     public Car(){
         setSpeed();
     }
@@ -20,31 +17,16 @@ public class Car extends Thread{
     @Override
     public void run() {
         super.run();
-<<<<<<< Updated upstream
 //        if (checkCell()){
 //            System.out.println("ultima celula");
 //        }else {
 //            movimenta();
 //        }
-=======
-        if (checkLastCell()){
-            System.out.println("ultima celula");
-        }else {
-//            while (checkLastCell() || checkStopCell()){
-                movimenta();
-
-//            }
-        }
->>>>>>> Stashed changes
     }
 
-    private boolean checkLastCell() { //final da road
+    private boolean checkCell() {
         return false;
     }
-
-//    private boolean checkStopCell(){ //cruzamento
-//       return false
-//    }
 
     private void movimenta() {
         System.out.println("Carro: " + toString() + " andou.");
@@ -53,14 +35,6 @@ public class Car extends Thread{
         //se andar H -> row=row+1 e column=column
         //se andar V -> row=row+1 e column=column
 
-    }
-
-    public Cell getCell() {
-        return cell;
-    }
-
-    public void setCell(Cell cell) {
-        this.cell = cell;
     }
 
     public int getRow() {

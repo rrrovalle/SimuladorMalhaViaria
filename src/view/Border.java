@@ -39,7 +39,11 @@ public class Border extends JFrame{
         btnStart.addActionListener((ActionEvent e) -> {
             String value = numeroVeiculos.getValue() + "";
             int cars = Integer.parseInt(value);
-            controller.start(cars);
+            try {
+                controller.start(cars);
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
         });
 
         btnEnd = new JButton("END");

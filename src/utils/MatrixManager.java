@@ -17,10 +17,8 @@ public class MatrixManager {
     private Cell[][] matriz;
 
     private static List<Integer[]> entries = new ArrayList<>();
-    private static List<Integer[]> exits = new ArrayList<>();
 
-    private MatrixManager() {
-    }
+    private MatrixManager() { }
 
     public static MatrixManager getInstance() {
         if (instance == null) {
@@ -45,9 +43,9 @@ public class MatrixManager {
         return matriz[row][col];
     }
 
-//    public boolean checkRoadPosition(int row, int col) {
-//        return matriz[row][col].getMoveType() != 0;
-//    }
+    public boolean checkRoadPosition(int row, int col) {
+        return matriz[row][col].getMoveType() != 0;
+    }
 
     public void print(String file) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -74,84 +72,46 @@ public class MatrixManager {
         }
     }
 
-    public void findRowsEntriesAndExits() {
-        for(int i = 0; i < this.getRows() - 1; ++i) {
-
-            if (getValueAtPosition(i, 0) == 2) {
-                entries.add(new Integer[]{i, 0});
-            }else if(getValueAtPosition(i, 0) == 4) {
-                exits.add(new Integer[]{i, 0});
-            }
-
-            if (getValueAtPosition(i, this.getCols() - 1) == 4) {
-                entries.add(new Integer[]{i, this.getCols() - 1});
-            }else if(getValueAtPosition(i, this.getCols() - 1) == 2){
-                exits.add(new Integer[]{i, this.getCols() - 1});
-            }
-        }
-
-    }
-
-    public void findColumnsEntriesAndExits() {
+    public List<Integer[]> findColumnsEntries() {
         for(int i = 0; i < this.getCols(); ++i) {
-
             if (getValueAtPosition(0, i) == 3) {
                 entries.add(new Integer[]{0, i});
-            }else if(getValueAtPosition(0, i) == 1){
-                exits.add(new Integer[]{0, i});
-            }
-
-            if (getValueAtPosition(this.getRows() - 1, i) == 1) {
+            } else if (getValueAtPosition(this.getRows() - 1, i) == 1) {
                 entries.add(new Integer[]{this.getRows() - 1, i});
-            }else if(getValueAtPosition(this.getRows() - 1, i) == 3){
-                exits.add(new Integer[]{this.getRows() - 1, i});
             }
         }
-<<<<<<< Updated upstream
-
         return entries;
-=======
-
     }
 
-    public void loadEntriesAndExits(){
-        findRowsEntriesAndExits();
-        findColumnsEntriesAndExits();
->>>>>>> Stashed changes
+    public List<Integer[]> findRowsEntries() {
+        for(int i = 0; i < this.getRows() - 1; ++i) {
+            if (getValueAtPosition(i, 0) == 2) {
+                entries.add(new Integer[]{i, 0});
+            } else if (getValueAtPosition(i, this.getCols() - 1) == 4) {
+                entries.add(new Integer[]{i, this.getCols() - 1});
+            }
+        }
+        return entries;
     }
 
+    public void loadEntries(){
+        findRowsEntries();
+        findColumnsEntries();
+    }
 
     public List<Integer[]> getEntries() {
         return entries;
     }
 
-    public List<Integer[]> getExits() {
-        return exits;
+    public List<Integer[]> printEntries() {
+        for (Integer[] cord:
+                entries) {
+            for (int j = 0; j < cord.length; j++) {
+                System.out.print(cord[j] +  " ");
+
+            }
+            System.out.print(" , ");
+        }
+        return entries;
     }
-
-//    public void printEntries() {
-//        for (Integer[] cord:
-//                entries) {
-//            for (int j = 0; j < cord.length; j++) {
-//                System.out.print(cord[j] +  " ");
-//
-//            }
-//            System.out.print(" , ");
-//        }
-//        System.out.println();
-//    }
-//
-//    public void printExits() {
-//        for (Integer[] cord:
-//                exits) {
-//            for (int j = 0; j < cord.length; j++) {
-//                System.out.print(cord[j] +  " ");
-//
-//            }
-//            System.out.print(" , ");
-//        }
-//        System.out.println();
-//    }
-
-
 }
