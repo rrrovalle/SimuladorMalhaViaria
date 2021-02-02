@@ -31,19 +31,23 @@ public class Car extends Thread {
         super.run();
 
         while (!outOfRoad) {
+            try {
+                Thread.currentThread().sleep(speed);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             if (checkLastCell()) {
                 System.out.println("ultima celula");
                 outOfRoad = true;
-            } else if (checkStopCell()) {
-                verificaCruzamento();
-            } else {
+            } else if (nextCell.isStopCell()) {
+//                verificaCruzamento();
+            } else if(!nextCell.containsCar()) {
                 movimenta();
-            }
 
-            try {
-                Thread.sleep(speed);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                frameController.resetCarCell(this);
+                cell = frameController.getCellAtPosition(row, column);
+                frameController.updateRoadView(this);
             }
         }
     }
@@ -52,37 +56,37 @@ public class Car extends Thread {
         return cell.isLastCell();
     }
 
-    private boolean checkStopCell(){ //cruzamento
-       return false;
-    }
-
     private void movimenta() {
         int moveType = MatrixManager.getInstance().getValueAtPosition(this.getRow(), this.getColumn());
-        switch(moveType){
+
+        switch (moveType) {
             case 1:
                 System.out.println("andou cima");
-                this.setRow(this.getRow()-1);
+                this.setRow(this.getRow() - 1);
                 this.setColumn(this.getColumn());
+                this.nextCell = frameController.getCellAtPosition(this.getRow() - 1, this.getColumn());
                 break;
             case 2:
                 System.out.println("andou dir");
                 this.setRow(this.getRow());
-                this.setColumn(this.getColumn()+1);
+                this.setColumn(this.getColumn() + 1);
+                this.nextCell = frameController.getCellAtPosition(this.getRow(), this.getColumn() + 1);
                 break;
             case 3:
                 System.out.println("andou baixo");
-                this.setRow(this.getRow()+1);
+                this.setRow(this.getRow() + 1);
                 this.setColumn(this.getColumn());
+                this.nextCell = frameController.getCellAtPosition(this.getRow() + 1, this.getColumn());
                 break;
             case 4:
                 System.out.println("andou esq");
                 this.setRow(this.getRow());
-                this.setColumn(this.getColumn()-1);
+                this.setColumn(this.getColumn() - 1);
+                this.nextCell = frameController.getCellAtPosition(this.getRow(), this.getColumn() - 1);
                 break;
             default:
                 break;
         }
-
     }
 
     public int getRow() {
