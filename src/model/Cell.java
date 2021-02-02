@@ -18,6 +18,7 @@ public class Cell {
         this.stopCell = false;
         this.lastCell = false;
         this.moveType = moveType;
+        this.icon = new ImageIcon(BaseRoad.getRoadType(moveType));
     }
 
     public boolean containsCar() {
@@ -42,6 +43,7 @@ public class Cell {
     }
 
     public void reset(){
+        this.setIcon(new ImageIcon(BaseRoad.getRoadType(moveType)));
         this.setContainsCar(false);
         this.car = null;
     }

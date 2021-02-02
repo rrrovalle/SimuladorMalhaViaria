@@ -1,7 +1,12 @@
 package model;
 
+import controller.FrameController;
+import controller.observer.Observer;
 import utils.MatrixManager;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Car extends Thread {
@@ -10,11 +15,14 @@ public class Car extends Thread {
     private int column;
     private int speed;
     private boolean outOfRoad = false;
+    private final FrameController frameController;
+    private final MatrixManager matrixManager = MatrixManager.getInstance();
 
     private Cell cell;
-    private Cell nextCell;
+    private Cell nextCell = new Cell(0);
 
-    public Car() {
+    public Car(FrameController frameController) {
+        this.frameController = frameController;
         setSpeed();
     }
 
@@ -94,8 +102,8 @@ public class Car extends Thread {
     }
 
     public void setSpeed() {
-        Random random = new Random();
-        this.speed = random.nextInt((100) + 1) + 10;
+//        Random random = new Random();
+        this.speed = 1000;
     }
 
     public int getSpeed() { //timesleep para a thread
@@ -111,7 +119,8 @@ public class Car extends Thread {
     }
 
     public boolean setFirstPosition(Integer row, Integer col) {
-        Cell cell = MatrixManager.getInstance().getCellAtPosition(row, col);
+        Cell cell = frameController.getCellAtPosition(row, col);
+        this.setCell(cell);
         if (cell.containsCar()) {
             System.out.println("Vaga ocupada");
             return false;

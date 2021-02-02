@@ -9,23 +9,23 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
-public class Border extends JFrame{
-	
-	private Controller controller;
-	private Road road;
-	Container menu;
-	JButton btnStart;
-	JButton btnEnd;
+public class Border extends JFrame {
 
-	JLabel lbVeiculos;
-	JSpinner numeroVeiculos;
+    private Controller controller;
+    private Road road;
+    Container menu;
+    JButton btnStart;
+    JButton btnEnd;
 
-	String[] vector = {"Semaforo", "Monitor"};
-	JComboBox<String> select;
+    JLabel lbVeiculos;
+    JSpinner numeroVeiculos;
+
+    String[] vector = {"Semaforo", "Monitor"};
+    JComboBox<String> select;
 
     public Border() throws IOException {
 
-    	controller = FrameController.getInstance();
+        controller = FrameController.getInstance();
 
         this.setSize(1200, 960);
         this.setLayout(new BorderLayout());
@@ -39,11 +39,7 @@ public class Border extends JFrame{
         btnStart.addActionListener((ActionEvent e) -> {
             String value = numeroVeiculos.getValue() + "";
             int cars = Integer.parseInt(value);
-            try {
-                controller.start(cars);
-            } catch (InterruptedException interruptedException) {
-                interruptedException.printStackTrace();
-            }
+            controller.start(cars);
         });
 
         btnEnd = new JButton("END");
@@ -67,7 +63,7 @@ public class Border extends JFrame{
         menu.add(btnEnd);
         menu.add(select);
         menu.add(lbVeiculos);
-        menu.add(numeroVeiculos);  
+        menu.add(numeroVeiculos);
 
         //Add components to frame layout
         this.add(menu, BorderLayout.NORTH);

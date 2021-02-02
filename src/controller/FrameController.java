@@ -17,7 +17,7 @@ import model.BaseRoad;
 public class FrameController implements Controller {
 
     private static FrameController instance;
-    private MatrixManager matrixManager = MatrixManager.getInstance();
+    private final MatrixManager matrixManager = MatrixManager.getInstance();
     private List<Car> cars = new ArrayList();
     private Cell[][] cells;
     private List<Observer> observers = new ArrayList();
@@ -59,34 +59,27 @@ public class FrameController implements Controller {
 
     }
 
-    public void start(int n) throws InterruptedException {
-
-//        matrixManager.printEntries();
-//        System.out.println("======================================================================");
-//        matrixManager.printExits();
-
-        for(int i = 0; i < n; ++i) {
-            Car newCar = new Car();
+    public void start(int n) {
+        for (int i = 0; i < n; ++i) {
+            Car newCar = new Car(this);
 
             Integer[] pos;
-            for(boolean checkFirstCell = false; !checkFirstCell; checkFirstCell = newCar.setFirstPosition(pos[0], pos[1])) {
+            for (boolean checkFirstCell = false; !checkFirstCell; checkFirstCell = newCar.setFirstPosition(pos[0], pos[1])) {
                 pos = this.getFirstCell();
             }
 
             this.cars.add(newCar);
-            this.addCarToRoadView(newCar);
+            this.updateRoadView(newCar);
+            newCar.start();
         }
+    }
 
-        for (Car c :
-                cars) {
-            resetCarCell(c);
-            c.run();
-            addCarToRoadView(c);
-        }
+    @Override
+    public void stop() {
 
     }
 
-    public void stop() {
+    public void stopSimulation() {
         System.out.println("Finalizando..");
     }
 
@@ -101,19 +94,16 @@ public class FrameController implements Controller {
         int row = this.matrixManager.getRows();
         int col = this.matrixManager.getCols();
 
-        for(int i = 0; i < row; ++i) {
-            for(int j = 0; j < col; ++j) {
+        for (int i = 0; i < row; ++i) {
+            for (int j = 0; j < col; ++j) {
                 int moveType = this.matrixManager.getValueAtPosition(i, j);
                 this.cells[i][j] = new Cell(moveType);
-                this.cells[i][j].setIcon(new ImageIcon(BaseRoad.getRoadType(moveType)));
-                if(setLastCell(new Integer[]{i,j})){
+                if (setLastCell(new Integer[]{i, j})) {
                     this.cells[i][j].setLastCell(true);
                 }
                 // compara o valor da celula com os valores de uma lista de celulas do tipo cruzamento.
-                for (int value: stopCells) {
-                    if(cells[i][j].getMoveType() == value){
-                        cells[i][j].setStopCell(true);
-                    }
+                if (stopCells.contains(cells[i][j].getMoveType())) {
+                    cells[i][j].setStopCell(true);
                 }
             }
         }
@@ -122,7 +112,7 @@ public class FrameController implements Controller {
     private boolean setLastCell(Integer[] array) {
         for (Integer[] aValue :
                 this.matrixManager.getExits()) {
-            if(Arrays.equals(aValue, array)){
+            if (Arrays.equals(aValue, array)) {
                 return true;
             }
         }
@@ -135,32 +125,34 @@ public class FrameController implements Controller {
 
     private Integer[] getFirstCell() {
         Collections.shuffle(this.matrixManager.getEntries());
-        return (Integer[])this.matrixManager.getEntries().get(0);
+        return this.matrixManager.getEntries().get(0);
     }
 
-    private void addCarToRoadView(Car c) {
+    public void updateRoadView(Car c) {
         int i = c.getRow();
         int j = c.getColumn();
 
         int moveType = this.matrixManager.getValueAtPosition(i, j);
-//        this.cells[i][j] = new Cell(moveType); //acho que não é necessario recriar as cell, so referenciar o carro e automaticamente ele atualzia que containsCar = true
         this.cells[i][j].setIcon(new ImageIcon(MoveType.getMoveType(moveType)));
         this.cells[i][j].setCar(c);
 
         notifyUpdate();
     }
 
-    public void resetCarCell(Car c){
-        System.out.println(c.getRow()+","+c.getColumn());
-        int moveType = this.matrixManager.getValueAtPosition(c.getRow(), c.getColumn());
-        this.cells[c.getRow()][c.getColumn()].reset();
-        this.cells[c.getRow()][c.getColumn()].setIcon(new ImageIcon(BaseRoad.getRoadType(moveType)));
+    public void resetCarCell(Car c) {
+        System.out.println(c.getRow() + "," + c.getColumn());
+        Cell cell = c.getCell();
+        cell.reset();
     }
 
     public void notifyUpdate() {
         for (Observer observer : observers) {
             observer.updateCarPosition();
         }
+    }
+
+    public Cell getCellAtPosition(int row, int col) {
+        return cells[row][col];
     }
 }
 

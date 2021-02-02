@@ -41,14 +41,6 @@ public class MatrixManager {
         return matriz[row][col].getMoveType();
     }
 
-    public Cell getCellAtPosition(int row, int col) {
-        return matriz[row][col];
-    }
-
-//    public boolean checkRoadPosition(int row, int col) {
-//        return matriz[row][col].getMoveType() != 0;
-//    }
-
     public void print(String file) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
 
