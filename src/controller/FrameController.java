@@ -1,6 +1,7 @@
 package controller;
 
 import controller.observer.Observer;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+
 import model.Car;
 import model.Cell;
 import model.MoveType;
@@ -59,19 +61,17 @@ public class FrameController implements Controller {
 
     }
 
-    public void start(int n) {
-        for (int i = 0; i < n; ++i) {
-            Car newCar = new Car(this);
+    public void start() {
+        Car newCar = new Car(this);
 
-            Integer[] pos;
-            for (boolean checkFirstCell = false; !checkFirstCell; checkFirstCell = newCar.setFirstPosition(pos[0], pos[1])) {
-                pos = this.getFirstCell();
-            }
-
-            this.cars.add(newCar);
-            this.updateRoadView(newCar);
-            newCar.start();
+        Integer[] pos;
+        for (boolean checkFirstCell = false; !checkFirstCell; checkFirstCell = newCar.setFirstPosition(pos[0], pos[1])) {
+            pos = this.getFirstCell();
         }
+
+        this.cars.add(newCar);
+        this.updateRoadView(newCar);
+        newCar.start();
     }
 
     @Override

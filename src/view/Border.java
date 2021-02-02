@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import controller.Controller;
 import controller.FrameController;
+import utils.CarsThreadController;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,6 +13,7 @@ import java.io.IOException;
 public class Border extends JFrame {
 
     private Controller controller;
+    private CarsThreadController carsThreadController = new CarsThreadController();
     private Road road;
     Container menu;
     JButton btnStart;
@@ -39,7 +41,8 @@ public class Border extends JFrame {
         btnStart.addActionListener((ActionEvent e) -> {
             String value = numeroVeiculos.getValue() + "";
             int cars = Integer.parseInt(value);
-            controller.start(cars);
+            carsThreadController.setQtdCarros(cars);
+            carsThreadController.start();
         });
 
         btnEnd = new JButton("END");

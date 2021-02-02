@@ -4,7 +4,7 @@ public interface Controller {
 	
 	public void changeMethodType(String var1);
 
-	public void start(int n) ;
+	public void start() ;
 
 	public void stop();
 
