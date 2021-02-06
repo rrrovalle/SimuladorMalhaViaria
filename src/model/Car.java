@@ -15,6 +15,7 @@ public class Car extends Thread {
     private int column;
     private int speed;
     private boolean outOfRoad = false;
+    private boolean onStreetIntersection = false;
     private final FrameController frameController;
     private final MatrixManager matrixManager = MatrixManager.getInstance();
 
@@ -37,11 +38,12 @@ public class Car extends Thread {
                 e.printStackTrace();
             }
 
-            if (checkLastCell()) {
-                System.out.println("ultima celula");
-                outOfRoad = true;
-            } else if (nextCell.isStopCell()) {
-//                verificaCruzamento();
+           if (nextCell.isStopCell()) {
+               verificaCruzamento();
+
+               frameController.resetCarCell(this);
+               cell = frameController.getCellAtPosition(row, column);
+               frameController.updateRoadView(this);
             } else if(!nextCell.containsCar()) {
                 movimenta();
 
@@ -77,6 +79,9 @@ public class Car extends Thread {
                 this.setRow(this.getRow() + 1);
                 this.setColumn(this.getColumn());
                 this.nextCell = frameController.getCellAtPosition(this.getRow() + 1, this.getColumn());
+                //if(this.onStreetIntersection) {
+//                    this.setStreetIntersection(false);
+//                }
                 break;
             case 4:
                 System.out.println("andou esq");
@@ -88,6 +93,10 @@ public class Car extends Thread {
                 break;
         }
     }
+
+    public boolean onStreetIntersection(){ return this.onStreetIntersection; }
+
+    public void setStreetIntersection(boolean crossing) { this.onStreetIntersection = crossing; }
 
     public int getRow() {
         return row;
@@ -128,7 +137,6 @@ public class Car extends Thread {
         if (cell.containsCar()) {
             System.out.println("Vaga ocupada");
             return false;
-
         } else {
             cell.setContainsCar(true);
             setRow(row);
@@ -136,5 +144,10 @@ public class Car extends Thread {
             System.out.println("inserido em:" + row + "," + col);
             return true;
         }
+    }
+
+    public void verificaCruzamento(){
+        setStreetIntersection(true);
+        movimenta();
     }
 }

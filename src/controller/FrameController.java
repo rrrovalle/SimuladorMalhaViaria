@@ -24,7 +24,6 @@ public class FrameController implements Controller {
     private Cell[][] cells;
     private List<Observer> observers = new ArrayList();
 
-
     private FrameController() {
         try {
             this.matrixManager.print("malhas/malha-exemplo-2.txt");
@@ -133,6 +132,9 @@ public class FrameController implements Controller {
         int j = c.getColumn();
 
         int moveType = this.matrixManager.getValueAtPosition(i, j);
+        if(c.onStreetIntersection()){
+            moveType = MoveType.convertMoveType(moveType); 
+        }
         this.cells[i][j].setIcon(new ImageIcon(MoveType.getMoveType(moveType)));
         this.cells[i][j].setCar(c);
 
