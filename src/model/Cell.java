@@ -8,15 +8,20 @@ public class Cell {
     private boolean stopCell;
     private boolean lastCell;
 
+    private int row;
+    private int column;
+
     private int moveType;
     private Icon icon;
     private Car car;
 
 
-    public Cell(int moveType){
+    public Cell(int moveType, int row, int column){
         this.containsCar = false;
         this.stopCell = false;
         this.lastCell = false;
+        this.row = row;
+        this.column = column;
         this.moveType = moveType;
         this.icon = new ImageIcon(BaseRoad.getRoadType(moveType));
     }
@@ -46,6 +51,22 @@ public class Cell {
         this.setIcon(new ImageIcon(BaseRoad.getRoadType(moveType)));
         this.setContainsCar(false);
         this.car = null;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
     }
 
     public Icon getIcon() {

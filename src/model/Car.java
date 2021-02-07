@@ -21,7 +21,7 @@ public class Car extends Thread {
     private boolean estaNoCruzamento = false;
 
     private Cell cell;
-    private Cell nextCell = new Cell(0);
+    private Cell nextCell = new Cell(0, 0, 0);
     private Cell saidaCruzamento;
 
     public Car(FrameController frameController) {
@@ -47,10 +47,6 @@ public class Car extends Thread {
                 verificaCruzamento();
             } else if (!nextCell.containsCar()) {
                 movimenta();
-
-                frameController.resetCarCell(this);
-                cell = frameController.getCellAtPosition(row, column);
-                frameController.updateRoadView(this);
             }
         }
     }

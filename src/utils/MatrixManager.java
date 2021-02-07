@@ -57,7 +57,7 @@ public class MatrixManager {
                 String[] colunas = line.split("\t");
 
                 for(int j = 0; j < getCols(); j++){
-                    matriz[i][j] = new Cell(Integer.parseInt(colunas[j]));
+                    matriz[i][j] = new Cell(Integer.parseInt(colunas[j]), i, j);
                 }
             }
 
