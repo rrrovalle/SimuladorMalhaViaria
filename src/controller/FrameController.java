@@ -88,7 +88,7 @@ public class FrameController implements Controller {
     }
 
     private void initRoadCells() {
-        this.cells = new Cell[this.matrixManager.getRows()][this.matrixManager.getCols()];
+        this.cells = matrixManager.getMatriz();
         List<Integer> stopCells = BaseRoad.getStopCells();
 
         int row = this.matrixManager.getRows();
@@ -96,12 +96,10 @@ public class FrameController implements Controller {
 
         for (int i = 0; i < row; ++i) {
             for (int j = 0; j < col; ++j) {
-                int moveType = this.matrixManager.getValueAtPosition(i, j);
-                this.cells[i][j] = new Cell(moveType);
                 if (setLastCell(new Integer[]{i, j})) {
                     this.cells[i][j].setLastCell(true);
                 }
-                // compara o valor da celula com os valores de uma lista de celulas do tipo cruzamento.
+
                 if (stopCells.contains(cells[i][j].getMoveType())) {
                     cells[i][j].setStopCell(true);
                 }

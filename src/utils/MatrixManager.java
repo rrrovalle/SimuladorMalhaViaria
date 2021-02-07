@@ -106,6 +106,10 @@ public class MatrixManager {
         findColumnsEntriesAndExits();
     }
 
+    public Cell[][] getMatriz(){
+        return matriz;
+    }
+
     public List<Integer[]> getEntries() {
         return entries;
     }
