@@ -54,7 +54,7 @@ public class Car extends Thread {
     //O verifica cruzamento é uma região crítica. Não pode acontecer de o carro ver o espaço vazio à sua frente,
     // e aí perder o processador por um instante, e quando o carro for tentar se mover o espaço na verdade não está vazio.
     private void verificaCruzamento() {
-        if(saidaCruzamento == null) {
+        if (saidaCruzamento == null) {
             List<Cell> saidasCruzamento = new ArrayList<>();
 
             Cell cell = nextCell;
@@ -62,30 +62,65 @@ public class Car extends Thread {
             // For responsável por passar pelas 4 células do cruzamento
             for (int i = 0; i < 4; i++) {
                 int moveType = cell.getMoveType();
-                cell = getNextCell(cell);
 
                 switch (moveType) {
                     case 9:
-                        //adiciona saída na lista
+                        saidasCruzamento.add(frameController.getCellAtPosition(cell.getRow(), cell.getColumn() + 1));
                         break;
                     case 10:
-                        //adiciona saída na lista
+                        saidasCruzamento.add(frameController.getCellAtPosition(cell.getRow() - 1, cell.getColumn()));
                         break;
                     case 11:
-                        //adiciona saída na lista
+                        saidasCruzamento.add(frameController.getCellAtPosition(cell.getRow() + 1, cell.getColumn()));
                         break;
                     case 12:
-                        //adiciona saída na lista
+                        saidasCruzamento.add(frameController.getCellAtPosition(cell.getRow(), cell.getColumn() - 1));
                         break;
                 }
+                cell = getNextCell(cell);
             }
 
             estaNoCruzamento = true;
             Collections.shuffle(saidasCruzamento);
             saidaCruzamento = saidasCruzamento.get(0);
+            movimenta();
         } else {
-//            movimenta();
 //            Aqui movimentaremos o carro e procuraremos pela saída quando ele já estiver dentro do cruzamento
+
+            switch (cell.getMoveType()) {
+                case 9:
+                    if (this.saidaCruzamento == frameController.getCellAtPosition(cell.getRow(), cell.getColumn() + 1)) {
+                        movimenta(saidaCruzamento);
+                        saidaCruzamento = null;
+                        estaNoCruzamento = false;
+                    }
+                    break;
+                case 10:
+                    if (this.saidaCruzamento == frameController.getCellAtPosition(cell.getRow() - 1, cell.getColumn())) {
+                        movimenta(saidaCruzamento);
+                        saidaCruzamento = null;
+                        estaNoCruzamento = false;
+                    }
+                    break;
+                case 11:
+                    if (this.saidaCruzamento == frameController.getCellAtPosition(cell.getRow() + 1, cell.getColumn())) {
+                        movimenta(saidaCruzamento);
+                        saidaCruzamento = null;
+                        estaNoCruzamento = false;
+                    }
+                    break;
+                case 12:
+                    if (this.saidaCruzamento == frameController.getCellAtPosition(cell.getRow(), cell.getColumn() - 1)) {
+                        movimenta(saidaCruzamento);
+                        saidaCruzamento = null;
+                        estaNoCruzamento = false;
+                    }
+                    break;
+            }
+
+            if(saidaCruzamento != null){
+                movimenta();
+            }
         }
     }
 
@@ -94,32 +129,23 @@ public class Car extends Thread {
     }
 
     private void movimenta() {
-        int moveType = MatrixManager.getInstance().getValueAtPosition(this.getRow(), this.getColumn());
+        frameController.resetCarCell(this);
+        cell = getNextCell(cell);
+        this.setColumn(cell.getColumn());
+        this.setRow(cell.getRow());
+        this.nextCell = getNextCell(cell);
 
-        switch (moveType) {
-            case 1:
-                this.setRow(this.getRow() - 1);
-                this.setColumn(this.getColumn());
-                this.nextCell = frameController.getCellAtPosition(this.getRow() - 1, this.getColumn());
-                break;
-            case 2:
-                this.setRow(this.getRow());
-                this.setColumn(this.getColumn() + 1);
-                this.nextCell = frameController.getCellAtPosition(this.getRow(), this.getColumn() + 1);
-                break;
-            case 3:
-                this.setRow(this.getRow() + 1);
-                this.setColumn(this.getColumn());
-                this.nextCell = frameController.getCellAtPosition(this.getRow() + 1, this.getColumn());
-                break;
-            case 4:
-                this.setRow(this.getRow());
-                this.setColumn(this.getColumn() - 1);
-                this.nextCell = frameController.getCellAtPosition(this.getRow(), this.getColumn() - 1);
-                break;
-            default:
-                break;
-        }
+        refreshViewAndCells();
+    }
+
+    private void movimenta(Cell c) {
+        frameController.resetCarCell(this);
+        cell = c;
+        this.setColumn(cell.getColumn());
+        this.setRow(cell.getRow());
+        this.nextCell = getNextCell(cell);
+
+        refreshViewAndCells();
     }
 
     public int getRow() {
@@ -179,35 +205,49 @@ public class Car extends Thread {
         if (cell.getMoveType() > 4 && cell.getMoveType() <= 8) {
             moveType = cell.getMoveType() - 4;
         } else if (cell.getMoveType() > 8) {
-            moveType = cell.getMoveType() - 8;
+            switch (cell.getMoveType()) {
+                case 9:
+                    moveType = 1;
+                    break;
+                case 10:
+                    moveType = 4;
+                    break;
+                case 11:
+                    moveType = 2;
+                    break;
+                case 12:
+                    moveType = 3;
+                    break;
+                default:
+                    moveType = 0;
+            }
         } else {
             moveType = cell.getMoveType();
         }
 
         switch (moveType) {
             case 1:
-                this.setRow(this.getRow() - 1);
-                this.setColumn(this.getColumn());
-                this.nextCell = frameController.getCellAtPosition(this.getRow() - 1, this.getColumn());
+                this.nextCell = frameController.getCellAtPosition(cell.getRow() - 1, cell.getColumn());
                 break;
             case 2:
-                this.setRow(this.getRow());
-                this.setColumn(this.getColumn() + 1);
-                this.nextCell = frameController.getCellAtPosition(this.getRow(), this.getColumn() + 1);
+                this.nextCell = frameController.getCellAtPosition(cell.getRow(), cell.getColumn() + 1);
                 break;
             case 3:
-                this.setRow(this.getRow() + 1);
-                this.setColumn(this.getColumn());
-                this.nextCell = frameController.getCellAtPosition(this.getRow() + 1, this.getColumn());
+                this.nextCell = frameController.getCellAtPosition(cell.getRow() + 1, cell.getColumn());
                 break;
             case 4:
-                this.setRow(this.getRow());
-                this.setColumn(this.getColumn() - 1);
-                this.nextCell = frameController.getCellAtPosition(this.getRow(), this.getColumn() - 1);
+                this.nextCell = frameController.getCellAtPosition(cell.getRow(), cell.getColumn() - 1);
                 break;
             default:
                 break;
         }
 
+        return nextCell;
+    }
+
+    public void refreshViewAndCells() {
+        frameController.resetCarCell(this);
+        cell = frameController.getCellAtPosition(row, column);
+        frameController.updateRoadView(this);
     }
 }
