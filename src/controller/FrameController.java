@@ -23,11 +23,11 @@ public class FrameController implements Controller {
     private List<Car> cars = new ArrayList();
     private Cell[][] cells;
     private List<Observer> observers = new ArrayList();
-
+    private String threadMethodType;
 
     private FrameController() {
         try {
-            this.matrixManager.print("malhas/malha-exemplo-2.txt");
+            this.matrixManager.print("malhas/malha-exemplo-1.txt");
             this.matrixManager.loadEntriesAndExits();
         } catch (IOException var2) {
             var2.printStackTrace();
@@ -52,13 +52,12 @@ public class FrameController implements Controller {
         this.observers.remove(obs);
     }
 
-    public void changeMethodType(String opt) {
-        if (opt.equals("Semaforos")) {
-            System.out.println("Trocando metodo para semaforos..");
-        } else if (opt.equals("Monitores")) {
-            System.out.println("Trocando metodo para monitores..");
-        }
+    public void changeThreadMethodType(String opt) {
+        this.threadMethodType = opt;
+    }
 
+    public String getThreadMethodType(){
+        return threadMethodType;
     }
 
     public void start() {
@@ -138,7 +137,6 @@ public class FrameController implements Controller {
     }
 
     public void resetCarCell(Car c) {
-        System.out.println(c.getRow() + "," + c.getColumn());
         Cell cell = c.getCell();
         cell.reset();
     }

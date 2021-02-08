@@ -53,7 +53,7 @@ public class Border extends JFrame {
         select = new JComboBox(vector);
         select.addActionListener((ActionEvent e) -> {
             String resultado = (String) select.getSelectedItem();
-            controller.changeMethodType(resultado);
+            controller.changeThreadMethodType(resultado);
         });
 
         lbVeiculos = new JLabel("Numero de veículos: ");

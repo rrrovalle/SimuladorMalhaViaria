@@ -2,7 +2,7 @@ package controller;
 
 public interface Controller {
 	
-	public void changeMethodType(String var1);
+	public void changeThreadMethodType(String var1);
 
 	public void start() ;
 
