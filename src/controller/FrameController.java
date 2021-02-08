@@ -27,7 +27,7 @@ public class FrameController implements Controller {
 
     private FrameController() {
         try {
-            this.matrixManager.print("malhas/malha-exemplo-1.txt");
+            this.matrixManager.print("malhas/malha-exemplo-3.txt");
             this.matrixManager.loadEntriesAndExits();
         } catch (IOException var2) {
             var2.printStackTrace();
@@ -130,7 +130,11 @@ public class FrameController implements Controller {
         int j = c.getColumn();
 
         int moveType = this.matrixManager.getValueAtPosition(i, j);
-        this.cells[i][j].setIcon(new ImageIcon(MoveType.getMoveType(moveType)));
+        if(moveType >= 5){
+            this.cells[i][j].setIcon(new ImageIcon(MoveType.convertMoveType(moveType)));
+        }else {
+            this.cells[i][j].setIcon(new ImageIcon(MoveType.getMoveType(moveType)));
+        }
         this.cells[i][j].setCar(c);
 
         notifyUpdate();

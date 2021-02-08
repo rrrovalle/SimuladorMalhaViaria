@@ -85,8 +85,8 @@ public class Car extends Thread {
                 }
                 cell = getNextCell(cell);
             }
-
-            int chosenExit = new Random().nextInt(4);
+ 
+            int chosenExit = new Random().nextInt(intersectionExits.size());
             this.intersectionExit = intersectionExits.get(chosenExit);
             this.pathToExit = pathToAllExits.get(chosenExit);
 
