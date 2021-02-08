@@ -2,5 +2,7 @@ package controller.observer;
 
 public interface Observer {
     
-    void updateCarPosition();
+    public void updateCarPosition();
+    public void changeStartButtonStatus(boolean status);
+    public void changeEndButtonStatus(boolean status);
 }

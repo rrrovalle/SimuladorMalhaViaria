@@ -54,6 +54,7 @@ public class FrameController implements Controller {
 
     public void changeThreadMethodType(String opt) {
         this.threadMethodType = opt;
+        notifyStartButton(true);
     }
 
     public String getThreadMethodType(){
@@ -61,6 +62,8 @@ public class FrameController implements Controller {
     }
 
     public void start() {
+        notifyStartButton(false);
+        notifyEndButton(true);
         Car newCar = new Car(this);
 
         Integer[] pos;
@@ -75,7 +78,8 @@ public class FrameController implements Controller {
 
     @Override
     public void stop() {
-
+        notifyStartButton(true);
+        notifyEndButton(false);
     }
 
     public void stopSimulation() {
@@ -148,6 +152,18 @@ public class FrameController implements Controller {
     public void notifyUpdate() {
         for (Observer observer : observers) {
             observer.updateCarPosition();
+        }
+    }
+
+    public void notifyStartButton(boolean status) {
+        for (Observer observer : observers) {
+            observer.changeStartButtonStatus(status);
+        }
+    }
+
+    public void notifyEndButton(boolean status) {
+        for (Observer observer : observers) {
+            observer.changeEndButtonStatus(status);
         }
     }
 

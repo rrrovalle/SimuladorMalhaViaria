@@ -4,13 +4,14 @@ import javax.swing.*;
 
 import controller.Controller;
 import controller.FrameController;
+import controller.observer.Observer;
 import utils.CarsThreadController;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
-public class Border extends JFrame {
+public class Border extends JFrame implements Observer {
 
     private Controller controller;
     private CarsThreadController carsThreadController = new CarsThreadController();
@@ -28,6 +29,7 @@ public class Border extends JFrame {
     public Border() throws IOException {
 
         controller = FrameController.getInstance();
+        controller.attach(this);
 
         this.setSize(1200, 960);
         this.setLayout(new BorderLayout());
@@ -44,11 +46,13 @@ public class Border extends JFrame {
             carsThreadController.setQtdCarros(cars);
             carsThreadController.start();
         });
+        btnStart.setEnabled(false);
 
         btnEnd = new JButton("END");
         btnEnd.addActionListener((ActionEvent e) -> {
             controller.stop();
         });
+        btnEnd.setEnabled(false);
 
         select = new JComboBox(vector);
         select.addActionListener((ActionEvent e) -> {
@@ -78,4 +82,16 @@ public class Border extends JFrame {
 //        this.pack();
     }
 
+    @Override
+    public void updateCarPosition() {}
+
+    @Override
+    public void changeStartButtonStatus(boolean status){
+        this.btnStart.setEnabled(status);
+    }
+
+    @Override
+    public void changeEndButtonStatus(boolean status) {
+        this.btnEnd.setEnabled(status);
+    }
 }

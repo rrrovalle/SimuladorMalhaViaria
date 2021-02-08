@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import controller.Controller;
 import controller.FrameController;
 import controller.observer.Observer;
 
@@ -16,17 +17,17 @@ public class Road extends JPanel implements Observer {
 
         @Override
         public int getRowCount() {
-            return fc.getMatrixManager().getRows();
+            return c.getMatrixManager().getRows();
         }
 
         @Override
         public int getColumnCount() {
-            return fc.getMatrixManager().getCols();
+            return c.getMatrixManager().getCols();
         }
 
         @Override
         public Object getValueAt(int row, int col) {
-            return fc.renderCell(row, col);
+            return c.renderCell(row, col);
         }
 
     }
@@ -45,7 +46,7 @@ public class Road extends JPanel implements Observer {
         }
     }
 
-    private FrameController fc;
+    private Controller c;
 
     private CellModel cellModel;
     private JTable cellTable;
@@ -54,8 +55,8 @@ public class Road extends JPanel implements Observer {
     public Road() {
         super();
 
-        fc = FrameController.getInstance();
-        fc.attach(this);
+        c = FrameController.getInstance();
+        c.attach(this);
 
         cellModel = new CellModel();
 
@@ -70,7 +71,6 @@ public class Road extends JPanel implements Observer {
         cellTable.setModel(this.cellModel);
         for (int x = 0 ; x < cellTable.getColumnModel().getColumnCount(); x++) {
             cellTable.getColumnModel().getColumn(x).setWidth(35);
-//            cellTable.getColumnModel().getColumn(x).setMinWidth(35);
             cellTable.getColumnModel().getColumn(x).setMaxWidth(45);
         }
         cellTable.setRowHeight(32);
@@ -79,8 +79,6 @@ public class Road extends JPanel implements Observer {
         cellTable.setDefaultRenderer(Object.class, new CellRenderer());
 
         add(cellTable);
-
-
     }
 
     @Override
@@ -88,4 +86,9 @@ public class Road extends JPanel implements Observer {
         updateUI();
     }
 
+    @Override
+    public void changeStartButtonStatus(boolean status) {}
+
+    @Override
+    public void changeEndButtonStatus(boolean status) {}
 }
