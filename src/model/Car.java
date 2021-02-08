@@ -37,11 +37,12 @@ public class Car extends Thread {
             try {
                 Thread.currentThread().sleep(speed);
             } catch (InterruptedException e) {
-                System.out.println("Deu boa! PARABENS finalizado");
+                e.getStackTrace();
             }
 
             if (checkLastCell()) {
                 outOfRoad = true;
+                frameController.updateCarCount(this);
             } else if (nextCell.isStopCell() || isInsideIntersection) {
                 verifyIntersection();
             } else if (!nextCell.containsCar()) {

@@ -91,4 +91,7 @@ public class Road extends JPanel implements Observer {
 
     @Override
     public void changeEndButtonStatus(boolean status) {}
+
+    @Override
+    public void changeCounter(int value) {}
 }

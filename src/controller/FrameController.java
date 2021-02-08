@@ -24,10 +24,11 @@ public class FrameController implements Controller {
     private Cell[][] cells;
     private List<Observer> observers = new ArrayList();
     private String threadMethodType;
+    private boolean stopped = false;
 
     private FrameController() {
         try {
-            this.matrixManager.print("malhas/malha-exemplo-3.txt");
+            this.matrixManager.print("malhas/malha-exemplo-1.txt");
             this.matrixManager.loadEntriesAndExits();
         } catch (IOException var2) {
             var2.printStackTrace();
@@ -72,16 +73,14 @@ public class FrameController implements Controller {
         }
 
         this.cars.add(newCar);
+        notifyCounter();
         this.updateRoadView(newCar);
         newCar.start();
     }
 
     @Override
     public void stop() {
-        for(Car c: cars){
-            c.interrupt();
-            c.setOutOfRoad(true);
-        }
+        this.stopped = true;
         notifyStartButton(true);
         notifyEndButton(false);
     }
@@ -120,6 +119,19 @@ public class FrameController implements Controller {
         return false;
     }
 
+    public void setStopped(boolean status){
+        this.stopped = status;
+    }
+
+    public boolean isStopped(){
+        return stopped;
+    }
+
+    public void updateCarCount(Car c){
+        this.cars.remove(c);
+        notifyCounter();
+    }
+
     public Icon renderCell(int row, int col) {
         return this.cells[row][col].getIcon();
     }
@@ -127,6 +139,10 @@ public class FrameController implements Controller {
     private Integer[] getFirstCell() {
         Collections.shuffle(this.matrixManager.getEntries());
         return this.matrixManager.getEntries().get(0);
+    }
+
+    public int getCars(){
+        return this.cars.size();
     }
 
     public void updateRoadView(Car c) {
@@ -166,6 +182,13 @@ public class FrameController implements Controller {
             observer.changeEndButtonStatus(status);
         }
     }
+
+    public void notifyCounter(){
+        for (Observer observer : observers) {
+            observer.changeCounter(this.getCars());
+        }
+    }
+
 
     public Cell getCellAtPosition(int row, int col) {
         return cells[row][col];

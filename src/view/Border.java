@@ -19,9 +19,14 @@ public class Border extends JFrame implements Observer {
     Container menu;
     JButton btnStart;
     JButton btnEnd;
+    JTextArea txtTime;
 
     JLabel lbVeiculos;
+    JLabel lbTimer;
+    JLabel lbCount;
+    JLabel lbNumCars;
     JSpinner numeroVeiculos;
+    JSpinner timer;
 
     String[] vector = {"","Semaforo", "Monitor"};
     JComboBox<String> select;
@@ -42,8 +47,11 @@ public class Border extends JFrame implements Observer {
         btnStart = new JButton("START");
         btnStart.addActionListener((ActionEvent e) -> {
             String value = numeroVeiculos.getValue() + "";
+            String timeOut = timer.getValue() + "";
             int cars = Integer.parseInt(value);
+            int timeOutValue = Integer.parseInt(timeOut);
             carsThreadController.setQtdCarros(cars);
+            carsThreadController.setTimer(timeOutValue);
             carsThreadController.start();
         });
         btnStart.setEnabled(false);
@@ -63,6 +71,11 @@ public class Border extends JFrame implements Observer {
         lbVeiculos = new JLabel("Numero de veículos: ");
         numeroVeiculos = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 
+        lbTimer = new JLabel("Tempo: ");
+        timer = new JSpinner(new SpinnerNumberModel(1, 1, 10, 1));
+
+        lbNumCars = new JLabel("Veículos: ");
+        lbCount = new JLabel("");
         menu.setLayout(new FlowLayout());
 
         //Add components to menu
@@ -71,6 +84,10 @@ public class Border extends JFrame implements Observer {
         menu.add(select);
         menu.add(lbVeiculos);
         menu.add(numeroVeiculos);
+        menu.add(lbTimer);
+        menu.add(timer);
+        menu.add(lbNumCars);
+        menu.add(lbCount);
 
         //Add components to frame layout
         this.add(menu, BorderLayout.NORTH);
@@ -93,5 +110,10 @@ public class Border extends JFrame implements Observer {
     @Override
     public void changeEndButtonStatus(boolean status) {
         this.btnEnd.setEnabled(status);
+    }
+
+    @Override
+    public void changeCounter(int value) {
+        this.lbCount.setText(value+"");
     }
 }
