@@ -5,6 +5,7 @@ import controller.FrameController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Semaphore;
 
 public class Car extends Thread {
 
@@ -14,6 +15,7 @@ public class Car extends Thread {
     private boolean outOfRoad = false;
     private final FrameController frameController;
     private boolean isInsideIntersection = false;
+    private Semaphore mutex;
 
     private Cell cell;
     private Cell nextCell = new Cell(0, 0, 0);
@@ -22,6 +24,7 @@ public class Car extends Thread {
 
     public Car(FrameController frameController) {
         this.frameController = frameController;
+        mutex = new Semaphore(1);
         setSpeed();
         System.out.println("Velocidade: " + speed);
     }
@@ -85,15 +88,16 @@ public class Car extends Thread {
                 }
                 cell = getNextCell(cell);
             }
- 
+
             int chosenExit = new Random().nextInt(intersectionExits.size());
             this.intersectionExit = intersectionExits.get(chosenExit);
             this.pathToExit = pathToAllExits.get(chosenExit);
 
             boolean carsOnPathing;
             do {
-                if (frameController.getThreadMethodType().equals("Semáforo")) {
-                    carsOnPathing = checkPathAndMoveSemafore();
+                System.out.println(frameController.getThreadMethodType());
+                if (frameController.getThreadMethodType().equals("Semaforo")) {
+                    carsOnPathing = checkPathAndMoveSemafophore();
                 } else {
                     carsOnPathing = checkPathAndMoveMonitor();
                 }
@@ -148,8 +152,27 @@ public class Car extends Thread {
         }
     }
 
-    private boolean checkPathAndMoveSemafore() {
-        return true;
+    private boolean checkPathAndMoveSemafophore() {
+        boolean carsOnPathing = false;
+        try {
+            mutex.acquire();
+
+            for (Cell c : pathToExit) {
+                if (c.containsCar()) {
+                    carsOnPathing = true;
+                    break;
+                }
+            }
+
+            if (!carsOnPathing)
+                moveCar();
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally{
+            mutex.release();
+            return carsOnPathing;
+        }
     }
 
     private synchronized boolean checkPathAndMoveMonitor() {

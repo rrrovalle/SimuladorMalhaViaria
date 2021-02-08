@@ -22,7 +22,7 @@ public class Border extends JFrame {
     JLabel lbVeiculos;
     JSpinner numeroVeiculos;
 
-    String[] vector = {"Semaforo", "Monitor"};
+    String[] vector = {"","Semaforo", "Monitor"};
     JComboBox<String> select;
 
     public Border() throws IOException {
