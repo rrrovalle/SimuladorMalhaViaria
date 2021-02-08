@@ -24,4 +24,22 @@ public enum MoveType {
         }
         return null;
     }
+
+    public static String convertMoveType(int side){
+        switch(side){
+            case 5:
+            case 9 :
+                return UP.toString();
+            case 6:
+            case 11:
+                return RIGHT.toString();
+            case 7:
+            case 12:
+                return DOWN.toString();
+            case 8:
+            case 10:
+                return LEFT.toString();
+        }
+        return null;
+    }
 }
