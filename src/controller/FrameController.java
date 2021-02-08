@@ -78,12 +78,12 @@ public class FrameController implements Controller {
 
     @Override
     public void stop() {
+        for(Car c: cars){
+            c.interrupt();
+            c.setOutOfRoad(true);
+        }
         notifyStartButton(true);
         notifyEndButton(false);
-    }
-
-    public void stopSimulation() {
-        System.out.println("Finalizando..");
     }
 
     public MatrixManager getMatrixManager() {

@@ -37,7 +37,7 @@ public class Car extends Thread {
             try {
                 Thread.currentThread().sleep(speed);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.println("Deu boa! PARABENS finalizado");
             }
 
             if (checkLastCell()) {
@@ -246,6 +246,10 @@ public class Car extends Thread {
 
     public void setCell(Cell cell) {
         this.cell = cell;
+    }
+
+    public void setOutOfRoad(boolean outOfRoad){
+        this.outOfRoad = outOfRoad;
     }
 
     public boolean setFirstPosition(Integer row, Integer col) {
