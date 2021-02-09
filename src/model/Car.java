@@ -115,11 +115,13 @@ public class Car extends Thread {
     private void checkPathAndMove(List<List<AbstractCell>> pathToAllExits, List<AbstractCell> intersectionExits) {
         List<AbstractCell> acquiredCells = new ArrayList<>();
         boolean allCellsAcquired = false;
-        int chosenExit = new Random().nextInt(intersectionExits.size());
-        List<AbstractCell> pathToExit = pathToAllExits.get(chosenExit);
-        pathToExit.add(intersectionExits.get(chosenExit));
+        List<AbstractCell> pathToExit;
 
         do {
+            int chosenExit = new Random().nextInt(intersectionExits.size());
+            pathToExit = pathToAllExits.get(chosenExit);
+            pathToExit.add(intersectionExits.get(chosenExit));
+
             for (AbstractCell c : pathToExit) {
                 if (c.setCarToIntersection(this)) {
                     acquiredCells.add(c);
@@ -127,7 +129,8 @@ public class Car extends Thread {
                     for (AbstractCell acquiredCell : acquiredCells) {
                         acquiredCell.reset();
                     }
-                    acquiredCells.clear();
+
+                    acquiredCells = new ArrayList<>();
 
                     try {
                         Thread.currentThread().sleep(speed);
@@ -140,6 +143,8 @@ public class Car extends Thread {
 
             if (pathToExit.size() == acquiredCells.size())
                 allCellsAcquired = true;
+            else
+                pathToExit.remove(intersectionExits.get(chosenExit));
         } while (!allCellsAcquired);
 
         for (AbstractCell c : pathToExit) {
