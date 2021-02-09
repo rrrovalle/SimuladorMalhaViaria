@@ -30,162 +30,131 @@ public class Car extends Thread {
         super.run();
 
         while (!outOfRoad) {
+            if (checkLastCell()) {
+                outOfRoad = true;
+                frameController.updateCarCount(this);
+            } else if (nextCell.isStopCell()) {
+                verifyIntersection();
+            } else {
+                moveCar();
+            }
+
             try {
                 Thread.currentThread().sleep(speed);
             } catch (InterruptedException e) {
                 e.getStackTrace();
             }
-
-            if (checkLastCell()) {
-                outOfRoad = true;
-                frameController.updateCarCount(this);
-            } else if (nextCell.isStopCell() || isInsideIntersection) {
-                verifyIntersection();
-            } else if (!nextCell.containsCar()) {
-                moveCar();
-            }
         }
 
-        frameController.resetCarCell(this);
+        cell.reset();
         frameController.notifyUpdate();
     }
 
     //O verifica cruzamento é uma região crítica. Não pode acontecer de o carro ver o espaço vazio à sua frente,
     // e aí perder o processador por um instante, e quando o carro for tentar se mover o espaço na verdade não está vazio.
     private void verifyIntersection() {
-        if (intersectionExit == null) {
-            List<Cell> intersectionExits = new ArrayList<>();
-            List<List<Cell>> pathToAllExits = new ArrayList<>();
-            List<Cell> currentPathing = new ArrayList<>();
+        List<AbstractCell> intersectionExits = new ArrayList<>();
+        List<List<AbstractCell>> pathToAllExits = new ArrayList<>();
+        List<AbstractCell> currentPathing = new ArrayList<>();
 
-            Cell cell = nextCell;
+        AbstractCell cell = nextCell;
 
-            // For responsável por passar pelas 4 células do cruzamento
-            for (int i = 0; i < 4; i++) {
-                int moveType = cell.getMoveType();
-                currentPathing.add(cell);
+        // For responsável por passar pelas 4 células do cruzamento
+        for (int i = 0; i < 4; i++) {
+            int moveType = cell.getMoveType();
+            currentPathing.add(cell);
 
-                switch (moveType) {
-                    case 9:
-                        intersectionExits.add(frameController.getCellAtPosition(cell.getRow(), cell.getColumn() + 1));
-                        pathToAllExits.add(new ArrayList<>(currentPathing));
-                        break;
-                    case 10:
-                        intersectionExits.add(frameController.getCellAtPosition(cell.getRow() - 1, cell.getColumn()));
-                        pathToAllExits.add(new ArrayList<>(currentPathing));
-                        break;
-                    case 11:
-                        intersectionExits.add(frameController.getCellAtPosition(cell.getRow() + 1, cell.getColumn()));
-                        pathToAllExits.add(new ArrayList<>(currentPathing));
-                        break;
-                    case 12:
-                        intersectionExits.add(frameController.getCellAtPosition(cell.getRow(), cell.getColumn() - 1));
-                        pathToAllExits.add(new ArrayList<>(currentPathing));
-                        break;
-                }
-                cell = getNextCell(cell);
+            switch (moveType) {
+                case 9:
+                    intersectionExits.add(frameController.getCellAtPosition(cell.getRow(), cell.getColumn() + 1));
+                    pathToAllExits.add(new ArrayList<>(currentPathing));
+                    break;
+                case 10:
+                    intersectionExits.add(frameController.getCellAtPosition(cell.getRow() - 1, cell.getColumn()));
+                    pathToAllExits.add(new ArrayList<>(currentPathing));
+                    break;
+                case 11:
+                    intersectionExits.add(frameController.getCellAtPosition(cell.getRow() + 1, cell.getColumn()));
+                    pathToAllExits.add(new ArrayList<>(currentPathing));
+                    break;
+                case 12:
+                    intersectionExits.add(frameController.getCellAtPosition(cell.getRow(), cell.getColumn() - 1));
+                    pathToAllExits.add(new ArrayList<>(currentPathing));
+                    break;
             }
+            cell = getNextCell(cell);
+        }
 
+        System.out.println(frameController.getThreadMethodType());
+        checkPathAndMove(pathToAllExits, intersectionExits);
+    }
+
+//    private boolean checkPathAndMoveSemafophore() {
+//        boolean carsOnPathing = false;
+//        try {
+//            mutex.acquire();
+//
+//            for (Cell c : pathToExit) {
+//                if (c.containsCar()) {
+//                    carsOnPathing = true;
+//                    break;
+//                }
+//            }
+//
+//            if (!carsOnPathing)
+//                moveCar();
+//
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }finally{
+//            mutex.release();
+//            return carsOnPathing;
+//        }
+//    }
+
+    private void checkPathAndMove(List<List<AbstractCell>> pathToAllExits, List<AbstractCell> intersectionExits) {
+        List<AbstractCell> acquiredCells = new ArrayList<>();
+        boolean allCellsAcquired = false;
+        List<AbstractCell> pathToExit;
+
+        do {
             int chosenExit = new Random().nextInt(intersectionExits.size());
-            this.intersectionExit = intersectionExits.get(chosenExit);
-            this.pathToExit = pathToAllExits.get(chosenExit);
+            pathToExit = pathToAllExits.get(chosenExit);
+            pathToExit.add(intersectionExits.get(chosenExit));
 
-            boolean carsOnPathing;
-            do {
-                System.out.println(frameController.getThreadMethodType());
-                if (frameController.getThreadMethodType().equals("Semaforo")) {
-                    carsOnPathing = checkPathAndMoveSemafophore();
+            for (AbstractCell c : pathToExit) {
+                if (c.setCarToIntersection(this)) {
+                    acquiredCells.add(c);
                 } else {
-                    carsOnPathing = checkPathAndMoveMonitor();
-                }
+                    for (AbstractCell acquiredCell : acquiredCells) {
+                        acquiredCell.reset();
+                    }
+                    acquiredCells.clear();
 
-                if (carsOnPathing) {
                     try {
                         Thread.currentThread().sleep(speed);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                }
-            } while (carsOnPathing);
-
-            isInsideIntersection = true;
-        } else {
-//            Aqui movimentaremos o carro e procuraremos pela saída quando ele já estiver dentro do cruzamento
-
-            switch (cell.getMoveType()) {
-                case 9:
-                    if (this.intersectionExit == frameController.getCellAtPosition(cell.getRow(), cell.getColumn() + 1)) {
-                        moveCarToIntersectionExit(intersectionExit);
-                        intersectionExit = null;
-                        isInsideIntersection = false;
-                    }
-                    break;
-                case 10:
-                    if (this.intersectionExit == frameController.getCellAtPosition(cell.getRow() - 1, cell.getColumn())) {
-                        moveCarToIntersectionExit(intersectionExit);
-                        intersectionExit = null;
-                        isInsideIntersection = false;
-                    }
-                    break;
-                case 11:
-                    if (this.intersectionExit == frameController.getCellAtPosition(cell.getRow() + 1, cell.getColumn())) {
-                        moveCarToIntersectionExit(intersectionExit);
-                        intersectionExit = null;
-                        isInsideIntersection = false;
-                    }
-                    break;
-                case 12:
-                    if (this.intersectionExit == frameController.getCellAtPosition(cell.getRow(), cell.getColumn() - 1)) {
-                        moveCarToIntersectionExit(intersectionExit);
-                        intersectionExit = null;
-                        isInsideIntersection = false;
-                    }
-                    break;
-            }
-
-            if (intersectionExit != null && !nextCell.containsCar()) {
-                moveCar();
-            }
-        }
-    }
-
-    private boolean checkPathAndMoveSemafophore() {
-        boolean carsOnPathing = false;
-        try {
-            mutex.acquire();
-
-            for (Cell c : pathToExit) {
-                if (c.containsCar()) {
-                    carsOnPathing = true;
                     break;
                 }
             }
 
-            if (!carsOnPathing)
-                moveCar();
+            if (pathToExit.size() == acquiredCells.size())
+                allCellsAcquired = true;
+        } while (!allCellsAcquired);
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }finally{
-            mutex.release();
-            return carsOnPathing;
-        }
-    }
+        for (AbstractCell c : pathToExit) {
+            moveCarToIntersectionExit(c);
 
-    private synchronized boolean checkPathAndMoveMonitor() {
-        boolean carsOnPathing = false;
-
-        for (Cell c : pathToExit) {
-            if (c.containsCar()) {
-                carsOnPathing = true;
-                break;
+            if (c != pathToExit.get(pathToExit.size() - 1)) {
+                try {
+                    Thread.currentThread().sleep(speed);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
-
-        if (!carsOnPathing)
-            moveCar();
-
-        return carsOnPathing;
     }
 
     private boolean checkLastCell() {
