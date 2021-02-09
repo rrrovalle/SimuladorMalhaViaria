@@ -4,14 +4,15 @@ import model.BaseRoad;
 import model.Car;
 
 import javax.swing.*;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-public class ConcreteCellMonitor extends AbstractCell{
+public class ConcreteCellMonitor extends AbstractCell {
 
-    private Lock lockCell;
+    private final Lock lockCell = new ReentrantLock();
 
-    public ConcreteCellMonitor(int moveType, int row, int column){
+    public ConcreteCellMonitor(int moveType, int row, int column) {
         this.stopCell = false;
         this.lastCell = false;
         this.row = row;
@@ -29,30 +30,26 @@ public class ConcreteCellMonitor extends AbstractCell{
     }
 
     public boolean setCarToIntersection(Car c) {
-        this.car = c;
-        return true;
+        try {
+            if (lockCell.tryLock(c.getSpeed(), TimeUnit.MILLISECONDS)) {
+                this.car = c;
+                return true;
+            }
+            return false;
+        } catch (InterruptedException e) {
+            return false;
+        }
     }
 
-    @Override
     public void setCar(Car c) {
-
+        lockCell.lock();
+        this.car = c;
     }
 
-    public void reset(){
+    public void reset() {
         this.setIcon(new ImageIcon(BaseRoad.getRoadType(moveType)));
         this.car = null;
-    }
-
-    public synchronized boolean lockCell(Car c){
-        if(!containsCar()){
-            this.car = c;
-            return true;
-        }
-        return false;
-    }
-
-    public boolean containsCar(){
-        return car != null;
+        lockCell.unlock();
     }
 
     public int getRow() {

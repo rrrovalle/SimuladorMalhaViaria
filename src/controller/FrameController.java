@@ -24,11 +24,12 @@ public class FrameController implements Controller {
     private AbstractCell[][] cells;
     private List<Observer> observers = new ArrayList();
     private String threadMethodType;
+    private final String filename = "malhas/malha-exemplo-3.txt";
     private boolean stopped = false;
 
     private FrameController() {
         try {
-            this.matrixManager.print("malhas/malha-exemplo-3.txt");
+            this.matrixManager.print(filename);
             this.matrixManager.loadEntriesAndExits();
         } catch (IOException var2) {
             var2.printStackTrace();
@@ -55,6 +56,11 @@ public class FrameController implements Controller {
 
     public void changeThreadMethodType(String opt) {
         this.threadMethodType = opt;
+        try {
+            matrixManager.changeMethodType(filename, threadMethodType);
+        } catch (IOException ex){
+            ex.printStackTrace();
+        }
         notifyStartButton(true);
     }
 
