@@ -12,26 +12,26 @@ public class CarsThreadController extends Thread {
         this.qtdCarros = qtdCarros;
     }
 
-    public void setTimer(int timer) { this.timer = timer; }
+    public void setTimer(int timer) {
+        this.timer = timer;
+    }
 
-    public int getTimer(){
+    public int getTimer() {
         return timer * 1000;
     }
 
     @Override
-    public void run(){
-            for (int i = 0; i < qtdCarros; i++) {
-                if(frameController.isStopped()){
-                    break;
-                }
-                frameController.start();
-
-                System.out.println(getTimer());
-                try {
-                    Thread.currentThread().sleep(getTimer());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+    public void run() {
+        for (int i = 0; i < qtdCarros; i++) {
+            if (frameController.isStopped()) {
+                break;
             }
+            frameController.start();
+            try {
+                Thread.currentThread().sleep(getTimer());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

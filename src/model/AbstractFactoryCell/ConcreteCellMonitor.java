@@ -1,37 +1,24 @@
-package model;
+package model.AbstractFactoryCell;
+
+import model.BaseRoad;
+import model.Car;
 
 import javax.swing.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-public class Cell {
+public class ConcreteCellMonitor extends AbstractCell {
 
-    private boolean containsCar;
-    private boolean stopCell;
-    private boolean lastCell;
+    private final Lock lockCell = new ReentrantLock();
 
-    private int row;
-    private int column;
-
-    private int moveType;
-    private Icon icon;
-    private Car car;
-
-
-    public Cell(int moveType, int row, int column){
-        this.containsCar = false;
+    public ConcreteCellMonitor(int moveType, int row, int column) {
         this.stopCell = false;
         this.lastCell = false;
         this.row = row;
         this.column = column;
         this.moveType = moveType;
         this.icon = new ImageIcon(BaseRoad.getRoadType(moveType));
-    }
-
-    public boolean containsCar() {
-        return containsCar;
-    }
-
-    public void setContainsCar(boolean containsCar) {
-        this.containsCar = containsCar;
     }
 
     public int getMoveType() {
@@ -42,15 +29,27 @@ public class Cell {
         return car;
     }
 
+    public boolean setCarToIntersection(Car c) {
+        try {
+            if (lockCell.tryLock(c.getSpeed(), TimeUnit.MILLISECONDS)) {
+                this.car = c;
+                return true;
+            }
+            return false;
+        } catch (InterruptedException e) {
+            return false;
+        }
+    }
+
     public void setCar(Car c) {
-        this.setContainsCar(true);
+        lockCell.lock();
         this.car = c;
     }
 
-    public void reset(){
+    public void reset() {
         this.setIcon(new ImageIcon(BaseRoad.getRoadType(moveType)));
-        this.setContainsCar(false);
         this.car = null;
+        lockCell.unlock();
     }
 
     public int getRow() {
