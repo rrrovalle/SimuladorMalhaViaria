@@ -30,6 +30,12 @@ public class Car extends Thread {
         super.run();
 
         while (!outOfRoad) {
+            try {
+                Thread.currentThread().sleep(speed);
+            } catch (InterruptedException e) {
+                e.getStackTrace();
+            }
+
             if (checkLastCell()) {
                 outOfRoad = true;
                 frameController.updateCarCount(this);
@@ -37,12 +43,6 @@ public class Car extends Thread {
                 verifyIntersection();
             } else {
                 moveCar();
-            }
-
-            try {
-                Thread.currentThread().sleep(speed);
-            } catch (InterruptedException e) {
-                e.getStackTrace();
             }
         }
 
@@ -88,29 +88,6 @@ public class Car extends Thread {
         System.out.println(frameController.getThreadMethodType());
         checkPathAndMove(pathToAllExits, intersectionExits);
     }
-
-//    private boolean checkPathAndMoveSemafophore() {
-//        boolean carsOnPathing = false;
-//        try {
-//            mutex.acquire();
-//
-//            for (Cell c : pathToExit) {
-//                if (c.containsCar()) {
-//                    carsOnPathing = true;
-//                    break;
-//                }
-//            }
-//
-//            if (!carsOnPathing)
-//                moveCar();
-//
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }finally{
-//            mutex.release();
-//            return carsOnPathing;
-//        }
-//    }
 
     private void checkPathAndMove(List<List<AbstractCell>> pathToAllExits, List<AbstractCell> intersectionExits) {
         List<AbstractCell> acquiredCells = new ArrayList<>();
