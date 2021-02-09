@@ -1,4 +1,7 @@
-package model;
+package model.AbstractFactoryCell;
+
+import model.BaseRoad;
+import model.Car;
 
 import javax.swing.*;
 
