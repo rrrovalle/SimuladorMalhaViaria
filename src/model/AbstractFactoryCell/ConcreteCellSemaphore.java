@@ -4,37 +4,20 @@ import model.BaseRoad;
 import model.Car;
 
 import javax.swing.*;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
-public class Cell {
+public class ConcreteCellSemaphore extends AbstractCell {
 
-    private boolean containsCar;
-    private boolean stopCell;
-    private boolean lastCell;
+    Semaphore mutex = new Semaphore(1);
 
-    private int row;
-    private int column;
-
-    private int moveType;
-    private Icon icon;
-    private Car car;
-
-
-    public Cell(int moveType, int row, int column){
-        this.containsCar = false;
+    public ConcreteCellSemaphore(int moveType, int row, int column) {
         this.stopCell = false;
         this.lastCell = false;
         this.row = row;
         this.column = column;
         this.moveType = moveType;
         this.icon = new ImageIcon(BaseRoad.getRoadType(moveType));
-    }
-
-    public boolean containsCar() {
-        return containsCar;
-    }
-
-    public void setContainsCar(boolean containsCar) {
-        this.containsCar = containsCar;
     }
 
     public int getMoveType() {

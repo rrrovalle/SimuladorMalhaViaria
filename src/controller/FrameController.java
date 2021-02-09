@@ -10,8 +10,8 @@ import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import model.AbstractFactoryCell.AbstractCell;
 import model.Car;
-import model.Cell;
 import model.MoveType;
 import utils.MatrixManager;
 import model.BaseRoad;
@@ -21,14 +21,14 @@ public class FrameController implements Controller {
     private static FrameController instance;
     private final MatrixManager matrixManager = MatrixManager.getInstance();
     private List<Car> cars = new ArrayList();
-    private Cell[][] cells;
+    private AbstractCell[][] cells;
     private List<Observer> observers = new ArrayList();
     private String threadMethodType;
     private boolean stopped = false;
 
     private FrameController() {
         try {
-            this.matrixManager.print("malhas/malha-exemplo-1.txt");
+            this.matrixManager.print("malhas/malha-exemplo-3.txt");
             this.matrixManager.loadEntriesAndExits();
         } catch (IOException var2) {
             var2.printStackTrace();
@@ -67,10 +67,8 @@ public class FrameController implements Controller {
         notifyEndButton(true);
         Car newCar = new Car(this);
 
-        Integer[] pos;
-        for (boolean checkFirstCell = false; !checkFirstCell; checkFirstCell = newCar.setFirstPosition(pos[0], pos[1])) {
-            pos = this.getFirstCell();
-        }
+        Integer[] pos = getFirstCell();
+        newCar.setFirstPosition(pos[0], pos[1]);
 
         this.cars.add(newCar);
         notifyCounter();
@@ -155,14 +153,8 @@ public class FrameController implements Controller {
         }else {
             this.cells[i][j].setIcon(new ImageIcon(MoveType.getMoveType(moveType)));
         }
-        this.cells[i][j].setCar(c);
 
         notifyUpdate();
-    }
-
-    public void resetCarCell(Car c) {
-        Cell cell = c.getCell();
-        cell.reset();
     }
 
     public void notifyUpdate() {
@@ -189,8 +181,7 @@ public class FrameController implements Controller {
         }
     }
 
-
-    public Cell getCellAtPosition(int row, int col) {
+    public AbstractCell getCellAtPosition(int row, int col) {
         return cells[row][col];
     }
 }

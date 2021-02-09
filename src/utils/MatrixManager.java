@@ -1,12 +1,12 @@
 package utils;
 
-import model.Cell;
+import model.AbstractFactoryCell.AbstractCell;
+import model.AbstractFactoryCell.ConcreteCellSemaphore;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class MatrixManager {
@@ -14,7 +14,7 @@ public class MatrixManager {
     private static MatrixManager instance;
 
     private final String[] tamanho = new String[2];
-    private Cell[][] matriz;
+    private AbstractCell[][] matriz;
 
     private static List<Integer[]> entries = new ArrayList<>();
     private static List<Integer[]> exits = new ArrayList<>();
@@ -50,14 +50,14 @@ public class MatrixManager {
             line = br.readLine();
             tamanho[1] = line.split("\t")[0];
 
-            matriz = new Cell[getRows()][getCols()];
+            matriz = new ConcreteCellSemaphore[getRows()][getCols()];
 
             for (int i = 0; i < getRows(); i++) {
                 line = br.readLine();
                 String[] colunas = line.split("\t");
 
                 for(int j = 0; j < getCols(); j++){
-                    matriz[i][j] = new Cell(Integer.parseInt(colunas[j]), i, j);
+                    matriz[i][j] = new ConcreteCellSemaphore(Integer.parseInt(colunas[j]), i, j);
                 }
             }
 
@@ -106,7 +106,7 @@ public class MatrixManager {
         findColumnsEntriesAndExits();
     }
 
-    public Cell[][] getMatriz(){
+    public AbstractCell[][] getMatriz(){
         return matriz;
     }
 

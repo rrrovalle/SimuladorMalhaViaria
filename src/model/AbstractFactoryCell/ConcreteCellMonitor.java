@@ -5,12 +5,13 @@ import model.Car;
 
 import javax.swing.*;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Lock;
 
-public class ConcreteCellSemaphore extends AbstractCell{
+public class ConcreteCellMonitor extends AbstractCell{
 
-    Semaphore mutex = new Semaphore(1);
+    private Lock lockCell;
 
-    public ConcreteCellSemaphore(int moveType, int row, int column){
+    public ConcreteCellMonitor(int moveType, int row, int column){
         this.stopCell = false;
         this.lastCell = false;
         this.row = row;
@@ -27,19 +28,31 @@ public class ConcreteCellSemaphore extends AbstractCell{
         return car;
     }
 
-    public void setCar(Car c) {
-        try {
-            mutex.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public boolean setCarToIntersection(Car c) {
         this.car = c;
+        return true;
+    }
+
+    @Override
+    public void setCar(Car c) {
+
     }
 
     public void reset(){
         this.setIcon(new ImageIcon(BaseRoad.getRoadType(moveType)));
         this.car = null;
-        mutex.release();
+    }
+
+    public synchronized boolean lockCell(Car c){
+        if(!containsCar()){
+            this.car = c;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean containsCar(){
+        return car != null;
     }
 
     public int getRow() {
