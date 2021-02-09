@@ -1,11 +1,12 @@
 package model;
 
 import controller.FrameController;
+import model.AbstractFactoryCell.AbstractCell;
+import model.AbstractFactoryCell.ConcreteCellSemaphore;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.Semaphore;
 
 public class Car extends Thread {
 
@@ -14,17 +15,12 @@ public class Car extends Thread {
     private long speed;
     private boolean outOfRoad = false;
     private final FrameController frameController;
-    private boolean isInsideIntersection = false;
-    private Semaphore mutex;
 
-    private Cell cell;
-    private Cell nextCell = new Cell(0, 0, 0);
-    private Cell intersectionExit;
-    private List<Cell> pathToExit;
+    private AbstractCell cell;
+    private AbstractCell nextCell = new ConcreteCellSemaphore(0, 0, 0);
 
     public Car(FrameController frameController) {
         this.frameController = frameController;
-        mutex = new Semaphore(1);
         setSpeed();
         System.out.println("Velocidade: " + speed);
     }
@@ -197,24 +193,26 @@ public class Car extends Thread {
     }
 
     private void moveCar() {
-        frameController.resetCarCell(this);
-        cell = getNextCell(cell);
-        this.setColumn(cell.getColumn());
-        this.setRow(cell.getRow());
-        if (!cell.isLastCell())
-            this.nextCell = getNextCell(cell);
+        AbstractCell c = getNextCell(cell);
+        c.setCar(this);
+        this.setColumn(c.getColumn());
+        this.setRow(c.getRow());
+        if (!c.isLastCell())
+            this.nextCell = getNextCell(c);
 
-        refreshViewAndCells();
+        cell.reset();
+        cell = c;
+        refreshView();
     }
 
-    private void moveCarToIntersectionExit(Cell c) {
-        frameController.resetCarCell(this);
+    private void moveCarToIntersectionExit(AbstractCell c) {
+        this.setColumn(c.getColumn());
+        this.setRow(c.getRow());
+        this.nextCell = getNextCell(c);
+        cell.reset();
         cell = c;
-        this.setColumn(cell.getColumn());
-        this.setRow(cell.getRow());
-        this.nextCell = getNextCell(cell);
 
-        refreshViewAndCells();
+        refreshView();
     }
 
     public int getRow() {
@@ -241,37 +239,31 @@ public class Car extends Thread {
         return speed;
     }
 
-    public Cell getCell() {
+    public AbstractCell getCell() {
         return cell;
     }
 
-    public void setCell(Cell cell) {
+    public void setCell(AbstractCell cell) {
         this.cell = cell;
     }
 
-    public void setOutOfRoad(boolean outOfRoad){
+    public void setOutOfRoad(boolean outOfRoad) {
         this.outOfRoad = outOfRoad;
     }
 
     public boolean setFirstPosition(Integer row, Integer col) {
-        Cell cell = frameController.getCellAtPosition(row, col);
+        AbstractCell cell = frameController.getCellAtPosition(row, col);
+        cell.setCar(this);
         this.setCell(cell);
-        if (cell.containsCar()) {
-            System.out.println("Vaga ocupada");
-            return false;
 
-        } else {
-            cell.setContainsCar(true);
-            setRow(row);
-            setColumn(col);
-            System.out.println("inserido em:" + row + "," + col);
-            return true;
-        }
+        setRow(row);
+        setColumn(col);
+        return true;
     }
 
     // Para este método precisaremos colocar as posições nas célular. Ele retorna a próxima célula em relação a uma célula qualquer,
     // e vai ser usado para mapearmos o cruzamento sem precisar mover o carro..
-    private Cell getNextCell(Cell cell) {
+    private AbstractCell getNextCell(AbstractCell cell) {
         int moveType;
 
         if (cell.getMoveType() > 4 && cell.getMoveType() <= 8) {
@@ -317,8 +309,7 @@ public class Car extends Thread {
         return nextCell;
     }
 
-    public void refreshViewAndCells() {
-        frameController.resetCarCell(this);
+    public void refreshView() {
         frameController.updateRoadView(this);
     }
 }

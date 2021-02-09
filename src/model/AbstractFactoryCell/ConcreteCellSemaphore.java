@@ -28,15 +28,31 @@ public class ConcreteCellSemaphore extends AbstractCell {
         return car;
     }
 
-    public void setCar(Car c) {
-        this.setContainsCar(true);
-        this.car = c;
+    public boolean setCarToIntersection(Car c) {
+        try {
+            if (mutex.tryAcquire(c.getSpeed(), TimeUnit.MILLISECONDS)) {
+                this.car = c;
+                return true;
+            }
+            return false;
+        } catch (InterruptedException e) {
+            return false;
+        }
     }
 
-    public void reset(){
+    public void setCar(Car c) {
+        try {
+            mutex.acquire();
+            this.car = c;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void reset() {
         this.setIcon(new ImageIcon(BaseRoad.getRoadType(moveType)));
-        this.setContainsCar(false);
         this.car = null;
+        mutex.release();
     }
 
     public int getRow() {
